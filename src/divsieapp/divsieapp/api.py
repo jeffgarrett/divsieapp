@@ -1,0 +1,2 @@
+def APIEndpoint(request):
+    return {}

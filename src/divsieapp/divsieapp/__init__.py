@@ -1,6 +1,6 @@
 from pyramid.config import Configurator
 from resources import Root
-import views
+import api, views
 import pyramid_jinja2
 import os
 
@@ -15,6 +15,8 @@ def make_app():
     config.add_view(views.my_view,
                     context=Root,
                     renderer='mytemplate.jinja2')
+    config.add_route("api_endpoint", "/api/v1/")
+    config.add_view(api.APIEndpoint, route_name="api_endpoint", renderer="json")
     config.add_static_view(name='static',
                            path=os.path.join(__here__, 'static'))
     return config.make_wsgi_app()

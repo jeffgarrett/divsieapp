@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>{% block title %} Divsie {% endblock %}</title>
+        <meta name="description" content="A productivity-oriented task manager">
+        <meta name="viewport" content="width=device-width">
+
+        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+	<link href="/static/vendor/bootstrap.min.css" rel="stylesheet">
+	<style>
+	  body {
+	    padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+	  }
+	</style>
+	<link href="/static/vendor/bootstrap-responsive.min.css" rel="stylesheet">
+	<link href="/static/vendor/font-awesome.min.css" rel="stylesheet">      
+	<link href="/static/style.css" rel="stylesheet">
+	<style>
+	  .fork img {
+	    position: fixed;
+	    top: 0;
+	    right: 0;
+	    z-index: 2000;
+	  }
+	</style>
+
+        <link rel="stylesheet" href="/static/vendor/normalize.css">
+        <link rel="stylesheet" href="/static/main.css">
+        <script src="/static/vendor/modernizr-2.6.2.min.js"></script>
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+	{% include "nav_bar.html" %}
+
+	{% block main %}
+	{% endblock %}
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="/static/vendor/jquery-1.8.3.min.js"><\/script>')</script>
+        <script src="/static/plugins.js"></script>
+        <script src="/static/main.js"></script>
+        <script src="/static/vendor/bootstrap.min.js"></script>
+
+
+        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+        <script>
+            var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
+            (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+            g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+            s.parentNode.insertBefore(g,s)}(document,'script'));
+        </script>
+    </body>
+</html>
