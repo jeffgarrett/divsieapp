@@ -11,9 +11,11 @@ handlers:
 - url: /_remote_api
   script: remote_api_wsgi.app
   login: admin
+  secure: always
 
 - url: /.*
   script: divsieapp.application
+  secure: always
 
 builtins:
 - appstats: off
