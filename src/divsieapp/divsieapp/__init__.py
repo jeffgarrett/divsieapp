@@ -11,10 +11,10 @@ def make_app():
     """ This function returns a Pyramid WSGI application.
     """
     config = Configurator(root_factory=Root)
-    config.add_renderer('.jinja2', pyramid_jinja2.Jinja2Renderer)
+    config.add_renderer('.html', pyramid_jinja2.Jinja2Renderer)
     config.add_view(views.my_view,
                     context=Root,
-                    renderer='mytemplate.jinja2')
+                    renderer='mytemplate.html')
     config.add_static_view(name='static',
                            path=os.path.join(__here__, 'static'))
     return config.make_wsgi_app()
