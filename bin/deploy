@@ -1,0 +1,333 @@
+#!/bin/bash
+
+args=$(getopt hcV: $*)
+
+if [ $? != 0 ] ; then
+    echo "Usage: $(basename $0) [-c] [-V version] [-h]"
+    echo "  -c: Clean ignored files before building"
+    echo "  -V: Override app.yaml version"
+    echo "  -h: Print this help"
+    exit 2
+fi
+
+set -- $args
+
+usage=0
+version=""
+clean=0
+
+for i do
+    case "$i" in
+        -h)
+            usage=1
+            shift;;
+        -c)
+            clean=1
+            shift;;
+        -V)
+            version="$2"; shift
+            shift;;
+        --)
+            shift
+            break;;
+    esac
+done
+
+if [ $usage -eq 1 ] ; then
+    echo "Usage: $(basename $0) [-c] [-V version] [-h]"
+    echo "  -c: Clean ignored files before building"
+    echo "  -V: Override app.yaml version"
+    echo "  -h: Print this help"
+    exit 0
+fi
+
+# Calculate the base working directory:
+# - If we are in a git repository, use that repository.
+# - Otherwise, if the script is in a git repository, use that repository.
+# - Otherwise, fail.
+echo -n "Calculating the base working directory... "
+CDUP=$(git rev-parse --show-cdup 2>/dev/null)
+if [ $? -ne 0 ] ; then
+    scriptdir="$(cd $(dirname $0); pwd -P)"
+    cd "$scriptdir"
+    CDUP=$(git rev-parse --show-cdup 2>/dev/null)
+    if [ $? -ne 0 ] ; then
+        echo "failed."
+        echo
+        echo "This does not look like a git repository! Aborting."
+        exit 1
+    fi
+fi
+if [ -n "$CDUP" ] ; then
+    cd $CDUP
+fi
+WORKING_DIR=$(pwd)
+echo "${WORKING_DIR}."
+
+YAML_PATH="${WORKING_DIR}/src/divsieapp/app.yaml"
+echo -n "Calculating version to deploy... "
+if [ -z "$version" ] ; then
+    version=$(grep ^version: $YAML_PATH|awk '{print $2}')
+fi
+echo "${version}."
+
+# Check the current branch
+BRANCH=$(git branch|awk '{if ($1 == "*") print $2}')
+echo "Checking the current branch... ${BRANCH}."
+if [ "x$BRANCH" != "xmaster" ] && [ "x$version" != "xdev" ] ; then
+    echo
+    echo "You are attempting to deploy a verison other than \"dev\" from the branch ${BRANCH}."
+    echo
+    echo "It is a bad idea to deploy off of a branch."
+    echo -n "Are you sure you wish to deploy? (y/n) "
+    read yn
+    if [ "x$yn" == "xn" ] ; then
+        echo
+        echo "Aborting."
+        exit 1
+    fi
+    while [ "x$yn" != "xy" ] && [ "x$yn" != "xn" ] ; do
+        echo "Expecting y or n."
+        echo -n "Are you sure you wish to deploy? (y/n) "
+        read yn
+
+        if [ "x$yn" == "xn" ] ; then
+            echo
+            echo "Aborting."
+            exit 1
+        fi
+    done
+    echo
+fi
+
+# Are all upstream changes merged?
+echo -n "Checking for upstream changes... "
+if [ -z "$(git remote show origin 2>/dev/null)" ] ; then
+    echo "skipping. (Remote \"origin\" does not exist.)"
+else
+    git fetch -q origin $BRANCH
+    MERGED=y
+    CHANGES=$(git log --oneline --no-merges $BRANCH..origin/$BRANCH|wc -l|awk '{print $0}')
+    if [ $CHANGES -ne 0 ]; then
+        echo "${CHANGES} changes to merge."
+
+        MERGED=n
+        echo
+        echo "The following upstream changes have not been merged:"
+        git log --pretty="format:%ae %s" --shortstat --no-merges $BRANCH..origin/$BRANCH | sed 's/^/  /' | sed -E 's/^(.{,72}).*/\1/' 
+        echo
+        echo "Changes should be merged before a deployment."
+        echo -n "Are you sure you wish to deploy? (y/n) "
+        read yn
+        if [ "x$yn" == "xn" ] ; then
+            echo "Aborting."
+            exit 1
+        fi
+        while [ "x$yn" != "xy" ] && [ "x$yn" != "xn" ] ; do
+            echo "Expecting y or n."
+            echo -n "Are you sure you wish to deploy? (y/n) "
+            read yn
+
+            if [ "x$yn" == "xn" ] ; then
+                echo "Aborting."
+                exit 1
+            fi
+        done
+        echo
+    else
+        echo "no changes to merge."
+    fi
+fi
+
+# Are all local changes pushed upstream?
+echo -n "Checking for local changes to push... "
+if [ -z "$(git remote show origin 2>/dev/null)" ] ; then
+    echo "skipping. (Remote \"origin\" does not exist.)"
+else
+    PUSHED=y
+    CHANGES=$(git log --oneline --no-merges origin/$BRANCH..$BRANCH|wc -l|awk '{print $1}')
+    if [ $CHANGES -ne 0 ] ; then
+        echo "${CHANGES} changes to push."
+
+        PUSHED=n
+        echo
+        echo "The following local changes have not been pushed:"
+        git log --pretty="format:%ae %s" --shortstat --no-merges origin/$BRANCH..$BRANCH | sed 's/^/  /' | sed -E 's/^(.{,72}).*/\1/'
+        echo
+        echo "Changes should be pushed before deployment."
+        if [ $MERGED == "y" ] ; then
+            echo -n "Do you want to push these changes now? (y/n) "
+            read yn
+            while [ "x$yn" != "xy" ] && [ "x$yn" != "xn" ] ; do
+                echo "Expecting y or n."
+                echo -n "Do you want to push these changes now? (y/n) "
+                read yn
+            done
+            if [ "x$yn" == "xy" ] ; then
+                git push --tags origin $BRANCH
+                if [ $? -ne 0 ] ; then
+                    echo "Error pushing changes. Aborting."
+                    exit 1
+                fi
+            fi
+            echo
+        else
+            echo "Skipping automatic push since there are unmerged upstream changes."
+            echo
+        fi
+    else
+        echo "no changes to push."
+    fi
+    if [ $PUSHED == "n" ] ; then
+        echo -n "Are you sure you wish to deploy? (y/n) "
+        read yn
+        if [ "x$yn" == "xn" ] ; then
+            echo "Aborting."
+            exit 1
+        fi
+        while [ "x$yn" != "xy" ] && [ "x$yn" != "xn" ] ; do
+            echo "Expecting y or n."
+            echo -n "Are you sure you wish to deploy? (y/n) "
+            read yn
+
+            if [ "x$yn" == "xn" ] ; then
+                echo "Aborting."
+                exit 1
+            fi
+        done
+        echo
+    fi
+fi
+
+# Are all files checked in?
+echo -n "Checking for untracked files... "
+UNTRACKED=$(git ls-files --exclude-standard -o|wc -l|awk '{print $1}')
+if [ $UNTRACKED -ne 0 ] ; then
+    echo "${UNTRACKED} untracked files."
+
+    echo
+    echo "The following files are not known to git:"
+    git ls-files --exclude-standard -o|sed 's/^/  /'
+    echo
+    echo "It is a really bad idea to deploy if changes are not committed!"
+    echo -n "Are you sure you wish to deploy? (y/n) "
+    read yn
+    if [ "x$yn" == "xn" ] ; then
+        echo "Aborting."
+        exit 1
+    fi
+    while [ "x$yn" != "xy" ] && [ "x$yn" != "xn" ] ; do
+        echo "Expecting y or n."
+        echo -n "Are you sure you wish to deploy? (y/n) "
+        read yn
+
+        if [ "x$yn" == "xn" ] ; then
+            echo "Aborting."
+            exit 1
+        fi
+    done
+    echo
+else
+    echo "no untracked files."
+fi
+
+# Are there any modified or deleted files?
+echo -n "Checking for modified files... "
+MODIFIED=$(git ls-files --exclude-standard -m -d|uniq|wc -l|awk '{print $1}') 
+if [ $MODIFIED -ne 0 ] ; then
+    echo "${MODIFIED} modified files."
+
+    echo
+    echo "The following files have been modified or deleted, but not committed:"
+    git ls-files --exclude-standard -m -d|uniq|sed 's/^/  /'
+    echo
+    echo "It is a really bad idea to deploy if changes are not committed!"
+    echo -n "Are you sure you wish to deploy? (y/n) "
+    read yn
+    if [ "x$yn" == "xn" ] ; then
+        echo "Aborting."
+        exit 1
+    fi
+    while [ "x$yn" != "xy" ] && [ "x$yn" != "xn" ] ; do
+        echo "Expecting y or n."
+        echo -n "Are you sure you wish to deploy? (y/n) "
+        read yn
+
+        if [ "x$yn" == "xn" ] ; then
+            echo "Aborting."
+            exit 1
+        fi
+    done
+    echo
+else
+    echo "no modified files."
+fi
+
+# Are there any staged but not committed changes?
+echo -n "Checking for staged, uncommitted changes... "
+STAGED=$(git diff --stat --cached|grep '|'|wc -l|awk '{print $1}') 
+if [ $STAGED -ne 0 ] ; then
+    echo "${STAGED} staged changes."
+
+    echo
+    echo "The following changes were staged but have not been committed:"
+    git diff --stat --cached|grep '|'|awk '{print $1}'|sed 's/^/  /'
+    echo
+    echo "It is a really bad idea to deploy if changes are not committed!"
+    echo -n "Are you sure you wish to deploy? (y/n) "
+    read yn
+    if [ "x$yn" == "xn" ] ; then
+        echo "Aborting."
+        exit 1
+    fi
+    while [ "x$yn" != "xy" ] && [ "x$yn" != "xn" ] ; do
+        echo "Expecting y or n."
+        echo -n "Are you sure you wish to deploy? (y/n) "
+        read yn
+
+        if [ "x$yn" == "xn" ] ; then
+            echo "Aborting."
+            exit 1
+        fi
+    done
+    echo
+else
+    echo "no staged changes."
+fi
+
+logfile=$(mktemp -t deploy)
+echo "Deploying version ${version}. Log file is ${logfile}"
+
+echo -n "Running bootstrap... "
+/usr/local/bin/python bootstrap.py --distribute >>${logfile} 2>&1
+if [ $? -ne 0 ] ; then
+    echo "failed."
+    echo "Aborting."
+    exit 1
+fi
+echo "done."
+echo -n "Running buildout... "
+bin/buildout >>${logfile} 2>&1
+if [ $? -ne 0 ] ; then
+    echo "failed."
+    echo "Aborting."
+    exit 1
+fi
+echo "done."
+echo -n "Running setup.py test... "
+cd ${WORKING_DIR}/src/divsieapp/
+../../bin/python setup.py test >>${logfile} 2>&1
+if [ $? -ne 0 ] ; then
+    echo "failed."
+    echo "Aborting."
+    exit 1
+fi
+echo "done."
+cd ${WORKING_DIR}
+echo -n "Running appcfg... "
+bin/appcfg -V ${version} --oauth2 update parts/divsieapp >>${logfile} 2>&1
+if [ $? -ne 0 ] ; then
+    echo "failed."
+else
+    echo "done."
+fi
