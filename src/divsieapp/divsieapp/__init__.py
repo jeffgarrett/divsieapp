@@ -16,8 +16,6 @@ def make_app():
     config.add_view(views.my_view,
                     context=Root,
                     renderer='mytemplate.html')
-    config.add_static_view(name='static',
-                           path=os.path.join(__here__, 'static'))
     return config.make_wsgi_app()
 
 application = make_app()

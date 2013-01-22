@@ -33,6 +33,14 @@ handlers:
   upload: static/apple-touch-icon(.*)\.png
   secure: always
 
+- url: /css
+  static_dir: static/css
+  secure: always
+
+- url: /js
+  static_dir: static/js
+  secure: always
+
 - url: /_remote_api
   script: remote_api_wsgi.app
   login: admin
