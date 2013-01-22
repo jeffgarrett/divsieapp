@@ -1,0 +1,15 @@
+# humanstxt.org/
+# The humans responsible & technology colophon
+
+# TEAM
+
+Developer: Jeff Garrett
+Contact: jeff@jgarrett.org
+From: Chicago, IL
+
+# THANKS
+
+# TECHNOLOGY COLOPHON
+
+Standards: HTML5, CSS3
+Components: Pyramid, Google App Engine, HTML5 Boilerplate
