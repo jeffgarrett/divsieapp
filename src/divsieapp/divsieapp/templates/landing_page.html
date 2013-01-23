@@ -1,0 +1,46 @@
+{% extends "base_page.html" %}
+
+{% block main %}
+<div class="container">
+    <div class="row">
+        <div class="span9">
+            <div id="landing_carousel" class="carousel slide">
+                <div class="carousel-inner">
+                    <div class="active item">
+                        <div class="filler" style="width: 100%; min-height: 569px;">
+                        </div>
+                        <div class="carousel-caption">
+                            <h4>Caption</h4>
+                            <p>Lorem ipsum</p>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="filler2" style="width: 100%; min-height: 569px;">
+                        </div>
+                        <div class="carousel-caption">
+                            <h4>Caption 2</h4>
+                            <p>Lorem ipsum</p>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="filler3" style="width: 100%; min-height: 569px;">
+                        </div>
+                        <div class="carousel-caption">
+                            <h4>Caption 3</h4>
+                            <p>Lorem ipsum</p>
+                        </div>
+                    </div>
+                    <!-- <div class="item">…</div>
+                    <div class="item">…</div> -->
+                </div>
+                <!-- Carousel nav -->
+                <a class="carousel-control left" href="#landing_carousel" data-slide="prev">‹</a>
+                <a class="carousel-control right" href="#landing_carousel" data-slide="next">›</a>
+            </div>
+        </div>
+        <div class="span3">
+            <!--Sidebar content-->
+        </div>
+    </div>
+</div>
+{% endblock %}

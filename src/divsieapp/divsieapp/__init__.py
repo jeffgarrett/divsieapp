@@ -15,7 +15,7 @@ def make_app():
     config.add_notfound_view(views.notfound, renderer='404.html')
     config.add_view(views.my_view,
                     context=Root,
-                    renderer='mytemplate.html')
+                    renderer='landing_page.html')
     return config.make_wsgi_app()
 
 application = make_app()
