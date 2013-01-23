@@ -4,4 +4,5 @@ def my_view(request):
     return {'project':'divsieapp'}
 
 def notfound(request):
-     return HTTPNotFound()
+    request.response.status = "404 Not Found"
+    return {}

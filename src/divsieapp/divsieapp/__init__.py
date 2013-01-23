@@ -12,7 +12,7 @@ def make_app():
     """
     config = Configurator(root_factory=Root)
     config.add_renderer('.html', pyramid_jinja2.Jinja2Renderer)
-    config.add_notfound_view(views.my_view, renderer='404.html')
+    config.add_notfound_view(views.notfound, renderer='404.html')
     config.add_view(views.my_view,
                     context=Root,
                     renderer='mytemplate.html')
