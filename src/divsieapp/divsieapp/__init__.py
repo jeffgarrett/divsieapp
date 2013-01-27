@@ -13,9 +13,16 @@ def make_app():
     config = Configurator(root_factory=Root)
     config.add_renderer('.html', pyramid_jinja2.Jinja2Renderer)
     config.add_notfound_view(views.notfound, renderer='404.html')
+
+    config.add_route('root', '')
+    config.add_route('request-invite', 'request-invite')
+
     config.add_view(views.my_view,
-                    context=Root,
+                    route_name='root',
                     renderer='landing_page.html')
+    config.add_view(views.request_invite_view,
+                    route_name='request-invite',
+                    renderer='request-invite.html')
     return config.make_wsgi_app()
 
 application = make_app()
