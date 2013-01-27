@@ -24,3 +24,7 @@
     background-image: -ms-repeating-linear-gradient(45deg, #ffffff, #9dff9d 100px,#ffffff 200px);
     background-image: repeating-linear-gradient(45deg, #ffffff, #9dff9d 100px,#ffffff 200px)
 }
+
+form#request_invite {
+    margin-top: 125px;
+}
