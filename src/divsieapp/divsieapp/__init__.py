@@ -16,6 +16,7 @@ def make_app():
 
     config.add_route('root', '')
     config.add_route('request-invite', 'request-invite')
+    config.add_route('login', 'login')
 
     config.add_view(views.my_view,
                     route_name='root',
@@ -23,6 +24,11 @@ def make_app():
     config.add_view(views.request_invite_view,
                     route_name='request-invite',
                     renderer='request-invite.html')
+    config.add_view(views.login_view,
+                    route_name='login',
+                    renderer='landing_page.html')
+
+
     return config.make_wsgi_app()
 
 application = make_app()
