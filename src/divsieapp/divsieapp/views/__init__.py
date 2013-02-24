@@ -1,5 +1,6 @@
 from pyramid.httpexceptions import HTTPNotFound, HTTPFound
 from divsieapp.lib.oauth2 import GoogleOAuth2, OAuth2Error
+from divsieapp.models.user import User
 
 def my_view(request):
     ga = GoogleOAuth2("https://divsieapp.appspot.com/login", prompt="select_account")
