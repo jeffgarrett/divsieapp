@@ -44,7 +44,6 @@ setup(name='divsieapp',
       test_suite="divsieapp",
       entry_points = """\
       """,
-      paster_plugins=['pyramid'],
       cmdclass = {'test': PyTest},
       )
 
