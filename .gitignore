@@ -13,6 +13,7 @@ eggs/MarkupSafe-*-py2.7-*.egg
 eggs/PasteDeploy-*-py2.7.egg
 eggs/WebOb-*-py2.7.egg
 eggs/WebTest-*-py2.7.egg
+eggs/cornice-*-py2.7.egg
 eggs/cov_core-*-py2.7.egg
 eggs/coverage-*-py2.7-*.egg
 eggs/py-*-py2.7.egg
@@ -21,6 +22,7 @@ eggs/pytest-*-py2.7.egg
 eggs/pytest_cov-*-py2.7.egg
 eggs/repoze.lru-*-py2.7.egg
 eggs/rod.recipe.appengine-*-py2.7.egg
+eggs/simplejson-*-py2.7-*.egg
 eggs/translationstring-*-py2.7.egg
 eggs/venusian-*-py2.7.egg
 eggs/zope.deprecation-*-py2.7.egg
