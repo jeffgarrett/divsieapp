@@ -32,3 +32,4 @@ develop-eggs/
 bin/appcfg
 bin/buildout
 bin/devappserver
+src/divsieapp/divsieapp/keys.py
