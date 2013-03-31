@@ -41,6 +41,13 @@ handlers:
   static_dir: static/js
   secure: always
 
+- url: /vendor
+  static_dir: static/vendor
+  secure: always
+  expiration: 180d
+  http_headers:
+    Vary: Accept-Encoding
+
 - url: /_remote_api
   script: remote_api_wsgi.app
   login: admin
