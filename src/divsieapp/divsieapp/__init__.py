@@ -6,7 +6,6 @@ import os
 
 __here__ = os.path.dirname(os.path.abspath(__file__))
 
-
 def make_app():
     """ This function returns a Pyramid WSGI application.
     """
