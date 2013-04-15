@@ -37,6 +37,13 @@ def make_app():
     authn_policy = AuthTktAuthenticationPolicy(
                        auth_secret,
                        callback=groupfinder,
+                       cookie_name='divsie_auth',
+                       secure=True,
+                       timeout=86400,
+                       reissue_time=300,
+                       max_age=86400,
+                       http_only=True,
+                       wild_domain=False,
                    )
     authz_policy = ACLAuthorizationPolicy()
     config = Configurator(root_factory=Root,
