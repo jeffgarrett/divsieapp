@@ -1,6 +1,10 @@
 {% extends "base_page.html" %}
 
 {% block main %}
+{% if user %}
+<div>
+</div>
+{% else %}
 <div class="container">
     <div class="row">
         <div class="span9 hidden-phone">
@@ -49,4 +53,5 @@
         </div>
     </div>
 </div>
+{% endif %}
 {% endblock %}
