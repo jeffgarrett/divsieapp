@@ -2,14 +2,27 @@ from pyramid.config import Configurator
 from resources import Root
 import views
 import pyramid_jinja2
-import os
+import os, time, logging
 
 __here__ = os.path.dirname(os.path.abspath(__file__))
+
+def timing_tween_factory(handler, registry):
+    def timing_tween(request):
+        start = time.time()
+        try:
+            response = handler(request)
+        finally:
+            end = time.time()
+            logging.info('Request took %sms' %
+                         int((end - start) * 1000))
+        return response
+    return timing_tween
 
 def make_app():
     """ This function returns a Pyramid WSGI application.
     """
     config = Configurator(root_factory=Root)
+    #config.add_tween('divsieapp.timing_tween_factory')
     config.add_renderer('.html', pyramid_jinja2.Jinja2Renderer)
     config.add_notfound_view(views.notfound, renderer='404.html')
 
