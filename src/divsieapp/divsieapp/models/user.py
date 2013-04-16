@@ -3,6 +3,7 @@ from identity import ExternalIdentity
 
 class User(ndb.Model):
     display_name = ndb.StringProperty()
+    invited = ndb.BooleanProperty(default=False)
 
     @classmethod
     @ndb.transactional

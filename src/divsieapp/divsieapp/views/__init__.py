@@ -1,5 +1,5 @@
 from pyramid.httpexceptions import HTTPNotFound, HTTPFound
-from pyramid.security import remember
+from pyramid.security import remember, Authenticated
 from divsieapp.lib.oauth2 import GoogleOAuth2, OAuth2Error
 from divsieapp.models import InvitationRequest
 from auth import login_view, logout_view
@@ -30,9 +30,17 @@ def add_views(config):
     config.add_view(logout_view,
                     route_name='logout',
                     renderer='landing_page.html')
-    config.add_view(my_view,
-                    route_name='root',
-                    renderer='landing_page.html')
     config.add_view(request_invite_view,
                     route_name='request-invite',
                     renderer='request-invite.html')
+    config.add_view(my_view,
+                    route_name='root',
+                    effective_principals=['g:invited'],
+                    renderer='landing_page.html')
+    config.add_view(my_view,
+                    route_name='root',
+                    effective_principals=Authenticated,
+                    renderer='invitation-code.html')
+    config.add_view(my_view,
+                    route_name='root',
+                    renderer='landing_page.html')

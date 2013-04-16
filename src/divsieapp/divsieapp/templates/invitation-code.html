@@ -1,0 +1,14 @@
+{% extends "base_page.html" %}
+
+{% block main %}
+<div class="container">
+    <div class="span6 offset3">
+        <h1 style="text-align: center">Please enter your invitation code:</h1>
+
+        <form action="/invitation-code" method="post" class="form-inline" style="text-align: center">
+            <input type="text" required autofocus>
+            <input type="submit" class="btn btn-primary">
+        </form>
+    </div>
+</div>
+{% endblock %}

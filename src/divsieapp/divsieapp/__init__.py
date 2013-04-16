@@ -29,7 +29,12 @@ def get_user(request):
         return models.User.from_identity(userid)
 
 def groupfinder(userid, request):
-    return None
+    usr = request.user
+    if not usr:
+        return None
+    if not usr.invited:
+        return []
+    return ['g:invited']
 
 def make_app():
     """ This function returns a Pyramid WSGI application.
