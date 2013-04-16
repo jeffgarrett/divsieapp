@@ -1,5 +1,5 @@
 from google.appengine.ext import ndb
-import datetime, user
+import user
 
 
 class ExternalIdentity(ndb.Model):

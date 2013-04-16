@@ -1,7 +1,7 @@
 from pyramid.httpexceptions import HTTPNotFound, HTTPFound
 from pyramid.security import remember
 from divsieapp.lib.oauth2 import GoogleOAuth2, OAuth2Error
-from divsieapp.models import GoogleIdentity
+from divsieapp.models import InvitationRequest
 from auth import login_view, logout_view
 
 def my_view(request):
@@ -11,7 +11,7 @@ def my_view(request):
 
 def request_invite_view(request):
     email = request.POST.get('email')
-    usr = User.from_email(email)
+    req = InvitationRequest.from_email(email)
     return {'project':'divsieapp', 'email':email}
 
 def notfound(request):

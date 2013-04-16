@@ -1,18 +1,8 @@
 from google.appengine.ext import ndb
 from identity import ExternalIdentity
-import datetime, logging
 
 class User(ndb.Model):
     display_name = ndb.StringProperty()
-
-    #external_identity = ndb.StructuredProperty(ExternalIdentity)
-    primary_email = ndb.StringProperty()
-
-    # Invitations:
-    #   time of first request, number of requests, generated code
-    invitation_req_first_time = ndb.DateTimeProperty(auto_now_add=True)
-    invitation_req_count = ndb.IntegerProperty(default=1)
-    invitation_code = ndb.StringProperty()
 
     @classmethod
     @ndb.transactional
