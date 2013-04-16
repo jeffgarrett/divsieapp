@@ -42,7 +42,7 @@ def add_views(config):
     config.add_view(my_view,
                     route_name='root',
                     effective_principals=['g:invited'],
-                    renderer='landing_page.html')
+                    renderer='app.html')
     config.add_view(my_view,
                     route_name='root',
                     effective_principals=Authenticated,
