@@ -1,3 +1,18 @@
 form#request_invite {
     margin-top: 125px;
 }
+
+#nav_menu {
+    margin-top: 0px;
+    border-top: none;
+    border-radius: 0px 0px 6px 6px;
+    box-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+}
+
+#nav_menu:before {
+    display: none;
+}
+
+#nav_menu:after {
+    display: none;
+}
