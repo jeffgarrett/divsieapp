@@ -17,3 +17,22 @@ def request_invite_view(request):
 def notfound(request):
     request.response.status = "404 Not Found"
     return {}
+
+def add_views(config):
+    """
+    Configure all views.
+
+    Note: config.scan() throws errors on app engine.
+    """
+    config.add_view(login_view,
+                    route_name='login',
+                    renderer='landing_page.html')
+    config.add_view(logout_view,
+                    route_name='logout',
+                    renderer='landing_page.html')
+    config.add_view(my_view,
+                    route_name='root',
+                    renderer='landing_page.html')
+    config.add_view(request_invite_view,
+                    route_name='request-invite',
+                    renderer='request-invite.html')

@@ -54,24 +54,19 @@ def make_app():
     config.add_renderer('.html', pyramid_jinja2.Jinja2Renderer)
     config.add_notfound_view(views.notfound, renderer='404.html')
 
-    config.add_route('root', '')
-    config.add_route('request-invite', 'request-invite')
-    config.add_route('login', 'login')
-    config.add_route('logout', 'logout')
+    # The root page, which may be different based on user status.
+    config.add_route('root', '/')
 
-    config.add_view(views.my_view,
-                    route_name='root',
-                    renderer='landing_page.html')
-    config.add_view(views.request_invite_view,
-                    route_name='request-invite',
-                    renderer='request-invite.html')
-    config.add_view(views.login_view,
-                    route_name='login',
-                    renderer='landing_page.html')
-    config.add_view(views.logout_view,
-                    route_name='logout',
-                    renderer='landing_page.html')
+    # The form target to request an invite code.
+    config.add_route('request-invite', '/request-invite')
 
+    # The targets which actually log a user in or out.
+    # The login target expects proof of identity.
+    config.add_route('login', '/login')
+    config.add_route('logout', '/logout')
+
+    # Hook up the views
+    views.add_views(config)
     return config.make_wsgi_app()
 
 application = make_app()

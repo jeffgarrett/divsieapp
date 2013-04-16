@@ -1,5 +1,6 @@
 from pyramid.httpexceptions import HTTPFound
 from pyramid.security import remember, forget
+from pyramid.view import view_config
 from divsieapp.lib.oauth2 import GoogleOAuth2, OAuth2Error
 
 def login_view(request):
