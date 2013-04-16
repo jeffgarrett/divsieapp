@@ -3,7 +3,7 @@ form#request_invite {
 }
 
 #nav_menu {
-    margin-top: 0px;
+    margin-top: 1px;
     border-top: none;
     border-radius: 0px 0px 6px 6px;
     box-shadow: 2px 2px 4px rgba(0,0,0,0.2);
