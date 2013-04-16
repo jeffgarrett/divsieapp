@@ -18,6 +18,12 @@ def notfound(request):
     request.response.status = "404 Not Found"
     return {}
 
+def invitation_code_view(request):
+    code = request.POST.get('code')
+    if code:
+        req = InvitationRequest.redeem_code(code, request.user)
+    raise HTTPFound('/')
+
 def add_views(config):
     """
     Configure all views.
@@ -39,6 +45,10 @@ def add_views(config):
                     renderer='landing_page.html')
     config.add_view(my_view,
                     route_name='root',
+                    effective_principals=Authenticated,
+                    renderer='invitation-code.html')
+    config.add_view(invitation_code_view,
+                    route_name='invitation-code',
                     effective_principals=Authenticated,
                     renderer='invitation-code.html')
     config.add_view(my_view,

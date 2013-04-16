@@ -64,6 +64,8 @@ def make_app():
 
     # The form target to request an invite code.
     config.add_route('request-invite', '/request-invite')
+    # The form target to redeem an invite code.
+    config.add_route('invitation-code', '/invitation-code')
 
     # The targets which actually log a user in or out.
     # The login target expects proof of identity.

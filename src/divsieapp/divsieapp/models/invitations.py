@@ -20,3 +20,11 @@ class InvitationRequest(ndb.Model):
             req.invitation_req_count += 1
         req.put()
         return req
+
+    @classmethod
+    def redeem_code(cls, code, user):
+        query = InvitationRequest.query(InvitationRequest.invitation_code == code)
+        req = query.fetch(1)
+        if req:
+            user.invited = True
+            user.put()
