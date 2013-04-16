@@ -24,9 +24,9 @@ def timing_tween_factory(handler, registry):
     return timing_tween
 
 def get_user(request):
-    email = unauthenticated_userid(request)
-    if email is not None:
-        return models.User.from_email(email)
+    userid = unauthenticated_userid(request)
+    if userid is not None:
+        return models.User.from_identity(userid)
 
 def groupfinder(userid, request):
     return None

@@ -1,7 +1,11 @@
 from google.appengine.ext import ndb
-import datetime
+from identity import ExternalIdentity
+import datetime, logging
 
 class User(ndb.Model):
+    display_name = ndb.StringProperty()
+
+    #external_identity = ndb.StructuredProperty(ExternalIdentity)
     primary_email = ndb.StringProperty()
 
     # Invitations:
@@ -21,3 +25,11 @@ class User(ndb.Model):
             usr.invitation_req_count += 1
         usr.put()
         return usr
+
+    @classmethod
+    def from_identity(cls, s):
+        identity = ExternalIdentity.from_string(s)
+        if not identity:
+            return None
+        key = ndb.Key(User, identity.user_id)
+        return key.get()

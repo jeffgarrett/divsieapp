@@ -1,7 +1,7 @@
 from pyramid.httpexceptions import HTTPNotFound, HTTPFound
 from pyramid.security import remember
 from divsieapp.lib.oauth2 import GoogleOAuth2, OAuth2Error
-from divsieapp.models.user import User
+from divsieapp.models import GoogleIdentity
 from auth import login_view, logout_view
 
 def my_view(request):
