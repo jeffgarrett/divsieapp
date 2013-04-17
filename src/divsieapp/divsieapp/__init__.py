@@ -1,13 +1,21 @@
+# Cornice will import simplejson which fails. Fake it.
+import sys, json
+sys.modules['simplejson'] = json
+
 from pyramid.config import Configurator
 from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.security import unauthenticated_userid
+
+import cornice
 from resources import Root
 import models
 import views
 import pyramid_jinja2
 from keys import auth_secret
 import os, time, logging
+
+import api_v1
 
 __here__ = os.path.dirname(os.path.abspath(__file__))
 
@@ -54,6 +62,8 @@ def make_app():
     config = Configurator(root_factory=Root,
                           authentication_policy=authn_policy,
                           authorization_policy=authz_policy)
+
+
     #config.add_tween('divsieapp.timing_tween_factory')
     config.add_request_method(get_user, 'user', reify=True)
     config.add_renderer('.html', pyramid_jinja2.Jinja2Renderer)
@@ -74,6 +84,10 @@ def make_app():
 
     # Hook up the views
     views.add_views(config)
+
+    config.include(cornice)
+    config.include(api_v1)
+
     return config.make_wsgi_app()
 
 application = make_app()
