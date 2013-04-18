@@ -5,6 +5,8 @@ bin/py.test
 bin/py.test-2.7
 bin/python
 downloads/google_appengine_*.zip
+eggs/pytz-*-py2.7.egg
+eggs/icalendar-*-py2.7.egg
 eggs/distribute-*-py2.7.egg
 eggs/Chameleon-*-py2.7.egg
 eggs/Jinja2-*-py2.7.egg

@@ -20,7 +20,7 @@ class PyTest(Command):
         errno = pytest.main("")
         raise SystemExit(errno)
 
-requires = ['pyramid', 'jinja2', 'cornice']
+requires = ['pyramid', 'jinja2', 'cornice', 'icalendar']
 test_requires = requires + ["pytest"]
 setup(name='divsieapp',
       version='0.0',
