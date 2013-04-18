@@ -16,3 +16,13 @@ form#request_invite {
 #nav_menu:after {
     display: none;
 }
+
+.card {
+    display: block;
+    box-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    border: 1px solid rgba(0,0,0,0.2);
+    width: 460px; /* span6 */
+    margin-left: 260px; /* offset3 */
+    padding: 1em;
+    margin-top: 2em;
+}

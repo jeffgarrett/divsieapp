@@ -12,9 +12,8 @@ class Task(object):
 
     @view(renderer='json')
     def collection_get(self):
-        vals = models.Task.query().order(models.Task.title).fetch(20)
-        keys = [t.key.integer_id() for t in vals]
-        return dict(zip(keys, vals))
+        tasks = models.Task.query().order(models.Task.title).fetch(20)
+        return { "tasks": tasks }
 
     @view(accept='text/calendar', renderer='json')
     def collection_post(self):
