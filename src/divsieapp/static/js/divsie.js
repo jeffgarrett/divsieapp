@@ -1,4 +1,4 @@
-var app = angular.module('divsie', ['ngResource']);
+var app = angular.module('divsie', ['ngResource', 'infinite-scroll']);
 
 app.factory('Tasks', ['$resource', function($resource) {
     return $resource('api/v1/tasks/:id', {}, 
@@ -7,9 +7,19 @@ app.factory('Tasks', ['$resource', function($resource) {
 
 app.controller('TaskListCtrl', ['$scope', 'Tasks', function($scope, Tasks) {
     $scope.tasks = [];
-    var wrapper = Tasks.query(function () {
-        $scope.tasks = wrapper.tasks;
-    });
+    $scope.loading = false;
+    $scope.extendList = function() {
+        $scope.loading = true;
+        var wrapper = Tasks.query(function () {
+            $scope.tasks = $scope.tasks.concat(wrapper.tasks);
+            $scope.loading = false;
+        },
+        function() {
+            $scope.loading = false;
+        });
+    };
+
+    $scope.extendList();
 }]);
 
 app.config(['$routeProvider', function($routeProvider) {
