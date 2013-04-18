@@ -31,11 +31,9 @@ def add_views(config):
     Note: config.scan() throws errors on app engine.
     """
     config.add_view(login_view,
-                    route_name='login',
-                    renderer='landing_page.html')
+                    route_name='login')
     config.add_view(logout_view,
-                    route_name='logout',
-                    renderer='landing_page.html')
+                    route_name='logout')
     config.add_view(request_invite_view,
                     route_name='request-invite',
                     renderer='request-invite.html')
