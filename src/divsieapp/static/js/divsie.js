@@ -10,7 +10,7 @@ app.controller('TaskListCtrl', ['$scope', 'Tasks', function($scope, Tasks) {
     $scope.loading = false;
     $scope.extendList = function() {
         $scope.loading = true;
-        var wrapper = Tasks.query(function () {
+        var wrapper = Tasks.query({ offset: $scope.tasks.length }, function () {
             $scope.tasks = $scope.tasks.concat(wrapper.tasks);
             $scope.loading = false;
         },

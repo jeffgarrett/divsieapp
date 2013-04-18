@@ -12,7 +12,11 @@ class Task(object):
 
     @view(renderer='json')
     def collection_get(self):
-        tasks = models.Task.query().order(models.Task.title).fetch(20)
+        try:
+            offset = int(self.request.GET.getone('offset'))
+        except:
+            offset = 0
+        tasks = models.Task.query().order(models.Task.title).fetch(20, offset=offset)
         return { "tasks": tasks }
 
     @view(accept='text/calendar', renderer='json')
