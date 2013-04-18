@@ -7,6 +7,8 @@ class Task(ndb.Model):
     title = ndb.StringProperty()
     description = ndb.StringProperty()
 
+    tags = ndb.StringProperty(repeated=True)
+
     # status = completed or not
     # completion time
     # last modified time?
