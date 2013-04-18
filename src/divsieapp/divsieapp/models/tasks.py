@@ -9,6 +9,16 @@ class Task(ndb.Model):
 
     tags = ndb.StringProperty(repeated=True)
 
+    def __json__(self, request):
+        return {
+                'user_id': self.user_id,
+                'user_context': self.user_context,
+                'title': self.title,
+                'description': self.description,
+                'tags': self.tags
+                }
+
+
     # status = completed or not
     # completion time
     # last modified time?

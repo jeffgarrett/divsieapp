@@ -2,8 +2,8 @@ from google.appengine.ext import ndb
 from cornice.resource import resource, view
 from divsieapp import models
 from divsieapp.lib import calendar
+import logging
 
-TASKS = { 1: [ 'hey' ] }
 
 @resource(collection_path='/api/v1/tasks', path='/api/v1/tasks/{id}')
 class Task(object):
@@ -12,7 +12,9 @@ class Task(object):
 
     @view(renderer='json')
     def collection_get(self):
-        return TASKS
+        vals = models.Task.query().order(models.Task.title).fetch(20)
+        keys = [t.key.integer_id() for t in vals]
+        return dict(zip(keys, vals))
 
     @view(accept='text/calendar', renderer='json')
     def collection_post(self):
