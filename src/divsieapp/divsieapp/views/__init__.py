@@ -6,8 +6,12 @@ from auth import login_view, logout_view
 
 def my_view(request):
     ga = GoogleOAuth2("https://divsieapp.appspot.com/login", prompt="select_account")
+    if request.user:
+        ng_app = 'divsie'
+    else:
+        ng_app = ''
     return {'project':'divsieapp', 'auth_url':ga.get_auth_url(), 'user':
-            request.user}
+            request.user, 'ng_app': ng_app}
 
 def request_invite_view(request):
     email = request.POST.get('email')
