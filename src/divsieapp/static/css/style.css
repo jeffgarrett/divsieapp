@@ -5,7 +5,7 @@ form#request_invite {
 #nav_menu {
     margin-top: 1px;
     border-top: none;
-    border-radius: 0px 0px 6px 6px;
+    border-radius: 0px 0px 4px 4px;
     box-shadow: 2px 2px 4px rgba(0,0,0,0.2);
 }
 
@@ -25,4 +25,5 @@ form#request_invite {
     margin-left: 260px; /* offset3 */
     padding: 1em;
     margin-top: 2em;
+    border-radius: 4px;
 }
