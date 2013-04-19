@@ -11,7 +11,17 @@ class Task(object):
         self.request = request
 
     @view(renderer='json')
+    def collection_delete(self):
+        # if not self.request.user...
+        user_id = self.request.user.key.integer_id()
+        tasks = models.Task.query(models.Task.user_id == user_id).fetch()
+        ndb.delete_multi([x.key for x in tasks])
+        return {}
+
+    @view(renderer='json')
     def collection_get(self):
+        # if not self.request.user...
+        user_id = self.request.user.key.integer_id()
         try:
             offset = int(self.request.GET.getone('offset'))
         except:
@@ -20,7 +30,8 @@ class Task(object):
             completed = bool(int(self.request.GET.getone('completed')))
         except:
             completed = False
-        tasks = models.Task.query(models.Task.completed == completed).order(models.Task.title).fetch(20, offset=offset)
+        tasks = models.Task.query(models.Task.user_id == user_id,
+                                  models.Task.completed == completed).order(models.Task.title).fetch(20, offset=offset)
         return { "tasks": tasks }
 
     @view(accept='text/calendar', renderer='json')
@@ -34,10 +45,13 @@ class Task(object):
             t = models.Task()
             t.user_id = self.request.user.key.integer_id()
             t.completed = (task.get('STATUS') == 'COMPLETED')
+            t.completion_time = task.get('COMPLETED')
+            t.last_modification_time = task.get('LAST-MODIFIED')
+            t.due_time = task.get('DUE')
             t.title = task.get('SUMMARY')
             t.description = task.get('DESCRIPTION')
             t.tags = task.get('TAGS')
+            t.priority = task.get('PRIORITY')
             updated_models.append(t)
         ndb.put_multi(updated_models)
         return {}
-

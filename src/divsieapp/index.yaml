@@ -3,4 +3,5 @@ indexes:
 - kind: Task
   properties:
   - name: completed
+  - name: user_id
   - name: title

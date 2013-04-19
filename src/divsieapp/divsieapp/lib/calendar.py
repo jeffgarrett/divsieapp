@@ -1,4 +1,4 @@
-import icalendar
+import datetime, icalendar, pytz
 
 def _extract_fields(lines, prefix):
     vals = []
@@ -28,7 +28,11 @@ def parse(text):
         task = dict(task)
         for key, val in task.items():
             if 'dt' in dir(val):
-                task[key] = val.dt
+                d = val.dt
+                if isinstance(d, datetime.datetime) and d.tzinfo is not None:
+                    d = d.astimezone(pytz.utc)
+                    d = d.replace(tzinfo=None)
+                task[key] = d
             elif 'title' in dir(val):
                 task[key] = str(val)
 
@@ -44,26 +48,28 @@ def parse(text):
             task['LOCATION'] = location
             task['DESCRIPTION'] = '\n'.join(lines)
 
+        # Normalize to datetime
+        if isinstance(task.get('DUE'), datetime.date):
+            task['DUE'] = datetime.datetime.combine(task['DUE'],
+                    datetime.time())
+
+        # Rescale priority from 0 to 1 (1 = highest)
+        if task.get('PRIORITY'):
+            task['PRIORITY'] = (9.0 - task['PRIORITY']) / 8.0
+
         tasks.append(task)
     return tasks
 
-#298 COMPLETED
-#895 DESCRIPTION
-#895 DTSTAMP
+#895 UID
+#895 DTSTAMP - similar to last-modified
+
+# recurrence stuff
 #9 DTSTART
-#895 DTSTART;TZID=America/Chicago
-#27 DUE
-#251 DUE;VALUE=DATE
-#906 END
-#896 LAST-MODIFIED
-#13 PRIORITY
 #178 RDATE;VALUE=DATE-TIME
 #91 RRULE
+
 #895 SEQUENCE
-#298 STATUS
-#895 SUMMARY
 #9 TZNAME
 #9 TZOFFSETFROM
 #9 TZOFFSETTO
-#895 UID
 # 3 URL;VALUE=URI

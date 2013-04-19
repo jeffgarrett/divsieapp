@@ -22,7 +22,10 @@ app.controller('TaskListCtrl', ['$scope', 'Tasks', function($scope, Tasks) {
     $scope.extendList();
 }]);
 
-app.controller('SettingsCtrl', ['$scope', function($scope) {
+app.controller('SettingsCtrl', ['$scope', 'Tasks', function($scope, Tasks) {
+    $scope.deleteTasks = function() {
+        Tasks.delete();
+    };
 }]);
 
 app.config(['$routeProvider', function($routeProvider) {

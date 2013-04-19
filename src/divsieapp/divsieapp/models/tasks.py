@@ -5,11 +5,16 @@ class Task(ndb.Model):
     user_context = ndb.StringProperty()
 
     completed = ndb.BooleanProperty()
+    completion_time = ndb.DateTimeProperty()
+    last_modification_time = ndb.DateTimeProperty()
+    due_time = ndb.DateTimeProperty()
 
     title = ndb.StringProperty()
     description = ndb.StringProperty()
 
     tags = ndb.StringProperty(repeated=True)
+
+    priority = ndb.FloatProperty()
 
     def __json__(self, request):
         return {
@@ -22,16 +27,12 @@ class Task(ndb.Model):
                 }
 
 
-    # status = completed or not
-    # completion time
-    # last modified time?
-    # priority
+    # more general status than completed/not?
     # rtm uid
 
     # meta?
 
     #notes
-    #due date
     #repeat
     #time estimate
     #tags / list
