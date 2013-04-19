@@ -16,7 +16,11 @@ class Task(object):
             offset = int(self.request.GET.getone('offset'))
         except:
             offset = 0
-        tasks = models.Task.query().order(models.Task.title).fetch(20, offset=offset)
+        try:
+            completed = bool(int(self.request.GET.getone('completed')))
+        except:
+            completed = False
+        tasks = models.Task.query(models.Task.completed == completed).order(models.Task.title).fetch(20, offset=offset)
         return { "tasks": tasks }
 
     @view(accept='text/calendar', renderer='json')
@@ -29,6 +33,7 @@ class Task(object):
             # Set up the task data model
             t = models.Task()
             t.user_id = self.request.user.key.integer_id()
+            t.completed = (task.get('STATUS') == 'COMPLETED')
             t.title = task.get('SUMMARY')
             t.description = task.get('DESCRIPTION')
             t.tags = task.get('TAGS')

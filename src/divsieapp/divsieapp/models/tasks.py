@@ -4,6 +4,8 @@ class Task(ndb.Model):
     user_id = ndb.IntegerProperty()
     user_context = ndb.StringProperty()
 
+    completed = ndb.BooleanProperty()
+
     title = ndb.StringProperty()
     description = ndb.StringProperty()
 
@@ -13,6 +15,7 @@ class Task(ndb.Model):
         return {
                 'user_id': self.user_id,
                 'user_context': self.user_context,
+                'completed': self.completed,
                 'title': self.title,
                 'description': self.description,
                 'tags': self.tags
