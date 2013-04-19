@@ -22,8 +22,12 @@ app.controller('TaskListCtrl', ['$scope', 'Tasks', function($scope, Tasks) {
     $scope.extendList();
 }]);
 
+app.controller('SettingsCtrl', ['$scope', function($scope) {
+}]);
+
 app.config(['$routeProvider', function($routeProvider) {
     $routeProvider.
         when('/list', {templateUrl: 'fragments/task_list.html', controller: "TaskListCtrl"}).
+        when('/settings', {templateUrl: 'fragments/settings.html', controller: "SettingsCtrl"}).
         otherwise({redirectTo: '/list'});
 }]);
