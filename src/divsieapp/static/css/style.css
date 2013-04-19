@@ -1,3 +1,5 @@
+@import url(https://fonts.googleapis.com/css?family=Raleway);
+
 form#request_invite {
     margin-top: 125px;
 }
@@ -19,6 +21,7 @@ form#request_invite {
 
 .card {
     display: block;
+    font-family: 'Raleway';
     box-shadow: 2px 2px 4px rgba(0,0,0,0.2);
     border: 1px solid rgba(0,0,0,0.2);
     width: 50%;
