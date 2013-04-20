@@ -28,7 +28,48 @@ form#request_invite {
     margin-left: auto;
     margin-right: auto;
     /* min-width: 300px; */
-    padding: 1em;
-    margin-top: 2em;
+    padding: 16px;
+    margin-top: 24px;
     border-radius: 4px;
+}
+
+.card .details {
+    display: none;
+    font-size: 12px;
+}
+
+.card .actions {
+    display: none;
+    margin-top: 16px;
+    margin-left: -17px;
+    margin-right: -20px;
+    margin-bottom: -16px;
+}
+
+.card:hover .details {
+    display: block;
+}
+
+.card:hover .actions {
+    display: block;
+}
+
+.actions .btn {
+    border-top-right-radius: 0px !important;
+    border-top-left-radius: 0px !important;
+    width: 25%;
+    background-image: none;
+    background-color: white;
+}
+
+.actions .btn:hover {
+    background-color: rgba(0,0,0,0.05);
+}
+
+.actions .btn i {
+    line-height: 20px;
+}
+
+.actions .btn span {
+    margin-right: 9px;
 }
