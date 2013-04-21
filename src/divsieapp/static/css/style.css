@@ -47,7 +47,7 @@ ul {
     margin-top: 16px;
     margin-left: -17px;
     margin-right: -20px;
-    margin-bottom: -16px;
+    margin-bottom: -17px;
 }
 
 .card:hover .details {
@@ -64,10 +64,12 @@ ul {
     width: 25%;
     background-image: none;
     background-color: white;
+    border: 1px solid rgba(0,0,0,0.2);
 }
 
 .actions .btn:hover {
     background-color: rgba(0,0,0,0.05);
+    border: 1px solid rgba(0,0,0,0.2);
 }
 
 .actions .btn i {
