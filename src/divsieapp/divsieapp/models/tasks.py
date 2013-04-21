@@ -18,12 +18,15 @@ class Task(ndb.Model):
 
     def __json__(self, request):
         return {
+                'id': self.key.integer_id(),
                 'user_id': self.user_id,
                 'user_context': self.user_context,
                 'completed': self.completed,
+                # times
                 'title': self.title,
                 'description': self.description,
-                'tags': self.tags
+                'tags': self.tags,
+                'priority': self.priority
                 }
 
 

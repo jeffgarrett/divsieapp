@@ -1,7 +1,7 @@
 var app = angular.module('divsie', ['ngResource', 'infinite-scroll']);
 
 app.factory('Tasks', ['$resource', function($resource) {
-    var Task = $resource('api/v1/tasks/:id', {}, 
+    var Task = $resource('api/v1/tasks/:id', { id: '@id' },
         { query: { method: 'GET', isArray: false } });
 
     Task.prototype.$complete = function(success, error) {
@@ -21,7 +21,8 @@ app.controller('TaskListCtrl', ['$scope', 'Tasks', function($scope, Tasks) {
     $scope.extendList = function() {
         $scope.loading = true;
         var wrapper = Tasks.query({ offset: $scope.tasks.length }, function () {
-            $scope.tasks = $scope.tasks.concat(wrapper.tasks);
+            angular.forEach(wrapper.tasks, function(m) { $scope.tasks.push(new Tasks(m)); });
+            /* $scope.tasks = $scope.tasks.concat(wrapper.tasks); */
             $scope.loading = false;
         },
         function() {
