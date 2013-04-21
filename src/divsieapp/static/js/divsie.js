@@ -1,8 +1,18 @@
 var app = angular.module('divsie', ['ngResource', 'infinite-scroll']);
 
 app.factory('Tasks', ['$resource', function($resource) {
-    return $resource('api/v1/tasks/:id', {}, 
+    var Task = $resource('api/v1/tasks/:id', {}, 
         { query: { method: 'GET', isArray: false } });
+
+    Task.prototype.$complete = function(success, error) {
+        if (!this.completed) {
+            this.completed = true;
+            this.completion_time = new Date();
+            this.$save(success, error);
+        }
+    };
+
+    return Task;
 }]);
 
 app.controller('TaskListCtrl', ['$scope', 'Tasks', function($scope, Tasks) {
