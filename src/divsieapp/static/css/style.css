@@ -73,3 +73,9 @@ form#request_invite {
 .actions .btn span {
     margin-right: 9px;
 }
+
+@media (max-width: 979px) {
+    #nav_menu {
+        margin-top: 6px;
+    }
+}
