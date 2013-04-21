@@ -54,4 +54,20 @@ class Task(object):
             t.priority = task.get('PRIORITY')
             updated_models.append(t)
         ndb.put_multi(updated_models)
-        return {}
+        return { "tasks": updated_models }
+
+    @view(renderer='json')
+    def post(self):
+        # if not self.request.user...
+        task_in = self.request.json_body
+        if not task_in.get('id'):
+            return
+        task = models.Task.get_by_id(task_in.get('id'))
+        if not task:
+            # problem
+            return
+        if task.user_id != self.request.user.key.integer_id():
+            # problem
+            return
+
+        return task
