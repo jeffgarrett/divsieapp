@@ -5,3 +5,10 @@ indexes:
   - name: completed
   - name: user_id
   - name: title
+
+- kind: Task
+  properties:
+  - name: completed
+  - name: current
+  - name: user_id
+  - name: title

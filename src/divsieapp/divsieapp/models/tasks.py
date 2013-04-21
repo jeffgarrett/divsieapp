@@ -4,6 +4,8 @@ class Task(ndb.Model):
     user_id = ndb.IntegerProperty()
     user_context = ndb.StringProperty()
 
+    current = ndb.BooleanProperty(default=False)
+
     completed = ndb.BooleanProperty()
     completion_time = ndb.DateTimeProperty()
     last_modification_time = ndb.DateTimeProperty()

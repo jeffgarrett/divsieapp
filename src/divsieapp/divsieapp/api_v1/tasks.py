@@ -22,16 +22,27 @@ class Task(object):
     def collection_get(self):
         # if not self.request.user...
         user_id = self.request.user.key.integer_id()
+        filters = [models.Task.user_id == user_id]
+
+        try:
+            completed = (self.request.GET.getone('completed') == "true")
+        except:
+            completed = False
+        filters.append(models.Task.completed == completed)
+
+        try:
+            logging.info(self.request.GET.getone('current'))
+            current = (self.request.GET.getone('current') == "true")
+            filters.append(models.Task.current == current)
+        except:
+            pass
+
         try:
             offset = int(self.request.GET.getone('offset'))
         except:
             offset = 0
-        try:
-            completed = bool(int(self.request.GET.getone('completed')))
-        except:
-            completed = False
-        tasks = models.Task.query(models.Task.user_id == user_id,
-                                  models.Task.completed == completed).order(models.Task.title).fetch(20, offset=offset)
+
+        tasks = models.Task.query(*filters).order(models.Task.title).fetch(20, offset=offset)
         return { "tasks": tasks }
 
     @view(accept='text/calendar', renderer='json')

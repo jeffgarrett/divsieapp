@@ -33,6 +33,20 @@ app.controller('TaskListCtrl', ['$scope', 'Tasks', function($scope, Tasks) {
     $scope.extendList();
 }]);
 
+app.controller('TaskNowCtrl', ['$scope', 'Tasks', function($scope, Tasks) {
+    $scope.tasks = [];
+
+    $scope.refresh = function() {
+        var wrapper = Tasks.query({ current: true }, function () {
+            angular.forEach(wrapper.tasks, function(m) { $scope.tasks.push(new Tasks(m)); });
+            /* $scope.tasks = $scope.tasks.concat(wrapper.tasks); */
+            $scope.loading = false;
+        });
+    };
+
+    $scope.refresh();
+}]);
+
 app.controller('SettingsCtrl', ['$scope', 'Tasks', function($scope, Tasks) {
     $scope.deleteTasks = function() {
         Tasks.delete();
@@ -40,8 +54,9 @@ app.controller('SettingsCtrl', ['$scope', 'Tasks', function($scope, Tasks) {
 }]);
 
 app.config(['$routeProvider', function($routeProvider) {
-    $routeProvider.
-        when('/list', {templateUrl: 'fragments/task_list.html', controller: "TaskListCtrl"}).
-        when('/settings', {templateUrl: 'fragments/settings.html', controller: "SettingsCtrl"}).
-        otherwise({redirectTo: '/list'});
+    $routeProvider
+        .when('/list', { templateUrl: 'fragments/task_list.html', controller: 'TaskListCtrl' })
+        .when('/now', { templateUrl: 'fragments/task_now.html', controller: 'TaskNowCtrl' })
+        .when('/settings', { templateUrl: 'fragments/settings.html', controller: 'SettingsCtrl' })
+        .otherwise({ redirectTo: '/list' });
 }]);
