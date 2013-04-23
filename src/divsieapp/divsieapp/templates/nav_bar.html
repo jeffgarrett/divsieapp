@@ -3,7 +3,7 @@
         <div class="container">
             <a class="brand" href="/">Divsie</a>
 {% if user %}
-            - <span ng-bind="page_title"></span>
+            <span class="brand" ng-show="page_title">- <span ng-bind="page_title"></span></span>
 {% endif %}
             <ul class="nav pull-right">
 {% if user %}
