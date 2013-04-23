@@ -90,4 +90,10 @@ def make_app():
 
     return config.make_wsgi_app()
 
+def webapp_add_wsgi_middleware(app):
+    from google.appengine.ext.appstats import recording
+    app = recording.appstats_wsgi_middleware(app)
+    return app
+
 application = make_app()
+application = webapp_add_wsgi_middleware(application)

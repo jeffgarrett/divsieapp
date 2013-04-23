@@ -68,7 +68,7 @@ handlers:
   secure: always
 
 builtins:
-- appstats: off
+- appstats: on
 
 libraries:
 - name: jinja2
