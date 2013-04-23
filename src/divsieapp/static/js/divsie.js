@@ -15,6 +15,16 @@ app.factory('Tasks', ['$resource', function($resource) {
     return Task;
 }]);
 
+app.directive('dvTaskCard', function() {
+    return {
+        restrict: 'EA',
+        scope: { task: '=task' },
+        templateUrl: '/fragments/task_card.html',
+        link: function(scope, elem, attr) {
+        }
+    }
+});
+
 app.controller('TaskListCtrl', ['$scope', '$timeout', 'Tasks', function($scope, $timeout, Tasks) {
     $scope.tasks = [];
     $scope.offset = 0;
