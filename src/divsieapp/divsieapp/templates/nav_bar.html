@@ -1,7 +1,11 @@
 <div class="navbar navbar-fixed-top">
     <div class="navbar-inner">
         <div class="container">
-            <a class="brand" href="/">Divsie</a>
+            <a class="brand" href="/">Divsie
+{% if user %}
+            - <span ng-bind="page_title"></span>
+{% endif %}
+            </a>
             <ul class="nav pull-right">
 {% if user %}
                 <li class="dropdown">
