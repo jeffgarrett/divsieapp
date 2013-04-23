@@ -2,6 +2,7 @@ from google.appengine.ext import ndb
 from cornice.resource import resource, view
 from divsieapp import models
 from divsieapp.lib import calendar
+from divsieapp.lib import filters
 import logging
 
 
@@ -22,28 +23,60 @@ class Task(object):
     def collection_get(self):
         # if not self.request.user...
         user_id = self.request.user.key.integer_id()
-        filters = [models.Task.user_id == user_id]
+        ds_filters = [models.Task.user_id == user_id]
 
         try:
             completed = (self.request.GET.getone('completed') == "true")
         except:
             completed = False
-        filters.append(models.Task.completed == completed)
+        ds_filters.append(models.Task.completed == completed)
 
         try:
             logging.info(self.request.GET.getone('current'))
             current = (self.request.GET.getone('current') == "true")
-            filters.append(models.Task.current == current)
+            ds_filters.append(models.Task.current == current)
         except:
             pass
+
+        try:
+            limit = int(self.request.GET.getone('limit'))
+            if limit < 10:
+                limit = 10
+            if limit > 50:
+                limit = 50
+        except:
+            limit = 20
 
         try:
             offset = int(self.request.GET.getone('offset'))
         except:
             offset = 0
 
-        tasks = models.Task.query(*filters).order(models.Task.title).fetch(20, offset=offset)
-        return { "tasks": tasks }
+        try:
+            filterstr = self.request.GET.getone('filter')
+        except:
+            filterstr = ''
+
+        qlimit = limit * (1 + 200 * len(filterstr))
+
+        queries = 0
+
+        f = filters.Filter(filterstr)
+        more = True
+        retval = []
+        cursor = None
+        while more and len(retval) < limit:
+            queries += 1
+            tasks, cursor, more = models.Task.query(*ds_filters).order(models.Task.title).fetch_page(qlimit, start_cursor=cursor,
+                    read_policy=ndb.EVENTUAL_CONSISTENCY)
+            if not tasks:
+                more = False
+                break
+            matching = [t for t in tasks if f.match(t)]
+            retval.extend(matching)
+            offset += qlimit
+
+        return { "tasks": retval, "offset": offset, "more": more, "queries": queries }
 
     @view(accept='text/calendar', renderer='json')
     def collection_post(self):
