@@ -94,3 +94,21 @@ ul {
     margin-left: auto;
     margin-right: auto;
 }
+
+/* Settings page */
+.settings {
+    max-width: 634px;
+    padding-left: 17px;
+    padding-right: 17px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.settings .section {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.settings .divider {
+    border-bottom: 1px solid black;
+}
