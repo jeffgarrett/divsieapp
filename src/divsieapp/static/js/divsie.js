@@ -1,5 +1,39 @@
 var app = angular.module('divsie', ['ngResource', 'infinite-scroll']);
 
+app.factory('$localStorage', ['$window'], function($window) {
+    // prefix?
+    var available = ('localStorage' in $window && $window.localStorage !== null);
+    var emptyFn = function() { return null; };
+    var setItem = emptyFn, getItem = emptyFn, removeItem = emptyFn, clear = emptyFn;
+
+    if (available) {
+        var storage = $window.localStorage;
+
+        setItem = function(key, val) {
+            storage.setItem(key, JSON.stringify(val));
+        };
+
+        getItem = function(key) {
+            return JSON.parse(storage.getItem(key));
+        };
+
+        removeItem = function(key) {
+            storage.removeItem(key);
+        };
+
+        clear = function() {
+            storage.clear();
+        };
+    }
+
+    return {
+        'setItem': setItem,
+        'getItem': getItem,
+        'removeItem': removeItem,
+        'clear': clear
+    };
+});
+
 app.factory('Tasks', ['$resource', function($resource) {
     var Task = $resource('api/v1/tasks/:id', { id: '@id' },
         { query: { method: 'GET', isArray: false } });
