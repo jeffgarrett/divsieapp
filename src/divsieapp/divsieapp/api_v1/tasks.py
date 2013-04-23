@@ -114,4 +114,9 @@ class Task(object):
             # problem
             return
 
+        if 'completed' in task_in:
+            if task_in['completed'] != task.completed:
+                task.completed = task_in['completed']
+                task.put()
+
         return task
