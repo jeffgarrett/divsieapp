@@ -4,6 +4,10 @@ form#request_invite {
     margin-top: 125px;
 }
 
+.brand a {
+    color: #777;
+}
+
 #nav_menu {
     margin-top: 1px;
     border-top: none;

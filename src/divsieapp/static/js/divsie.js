@@ -74,9 +74,7 @@ app.controller('TaskNowCtrl', ['$scope', 'Tasks', function($scope, Tasks) {
     $scope.refresh();
 }]);
 
-app.controller('SettingsCtrl', ['$scope', '$rootScope', 'Tasks', function($scope, $rootScope, Tasks) {
-    $rootScope.page_title = 'Settings';
-
+app.controller('SettingsCtrl', ['$scope', 'Tasks', function($scope, Tasks) {
     $scope.deleteTasks = function() {
         Tasks.delete();
     };
@@ -84,8 +82,17 @@ app.controller('SettingsCtrl', ['$scope', '$rootScope', 'Tasks', function($scope
 
 app.config(['$routeProvider', function($routeProvider) {
     $routeProvider
-        .when('/list', { templateUrl: 'fragments/task_list.html', controller: 'TaskListCtrl' })
-        .when('/now', { templateUrl: 'fragments/task_now.html', controller: 'TaskNowCtrl' })
-        .when('/settings', { templateUrl: 'fragments/settings.html', controller: 'SettingsCtrl' })
+        .when('/list', { templateUrl: 'fragments/task_list.html', title: 'List', controller: 'TaskListCtrl' })
+        .when('/now', { templateUrl: 'fragments/task_now.html', title: 'Now', controller: 'TaskNowCtrl' })
+        .when('/settings', { templateUrl: 'fragments/settings.html', title: 'Settings', controller: 'SettingsCtrl' })
         .otherwise({ redirectTo: '/list' });
+
+}]);
+
+app.run(['$rootScope', function($rootScope) {
+    $rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
+        if (current.$route) {
+            $rootScope.title = current.$route.title;
+        }
+    });
 }]);
