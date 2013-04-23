@@ -15,22 +15,49 @@ app.factory('Tasks', ['$resource', function($resource) {
     return Task;
 }]);
 
-app.controller('TaskListCtrl', ['$scope', 'Tasks', function($scope, Tasks) {
+app.controller('TaskListCtrl', ['$scope', '$timeout', 'Tasks', function($scope, $timeout, Tasks) {
     $scope.tasks = [];
+    $scope.offset = 0;
+    $scope.more = true;
+    $scope.task_filter = '';
+
     $scope.loading = false;
-    $scope.extendList = function() {
+    $scope.extendList = function(clearTasks) {
+        if ($scope.loading) {
+            return;
+        }
+        if (!$scope.more && !clearTasks) {
+            return;
+        }
         $scope.loading = true;
-        var wrapper = Tasks.query({ offset: $scope.tasks.length }, function () {
+        if (clearTasks) {
+            $scope.offset = 0;
+        }
+        var wrapper = Tasks.query({ filter: $scope.task_filter, offset: $scope.offset }, function () {
+            if (clearTasks) {
+                $scope.tasks = [];
+            }
             angular.forEach(wrapper.tasks, function(m) { $scope.tasks.push(new Tasks(m)); });
-            /* $scope.tasks = $scope.tasks.concat(wrapper.tasks); */
+            $scope.offset = wrapper.offset;
+            $scope.more = wrapper.more;
             $scope.loading = false;
         },
         function() {
             $scope.loading = false;
         });
     };
+    //$scope.extendList();
 
-    $scope.extendList();
+    var filter_timeout;
+    $scope.switchFilter = function(newValue) {
+        // Wait for a break in typing
+        if (filter_timeout) {
+            $timeout.cancel(filter_timeout);
+        }
+
+        filter_timeout = $timeout(function() { $scope.extendList(true); }, 500);
+    };
+    $scope.$watch('task_filter', $scope.switchFilter);
 }]);
 
 app.controller('TaskNowCtrl', ['$scope', 'Tasks', function($scope, Tasks) {
