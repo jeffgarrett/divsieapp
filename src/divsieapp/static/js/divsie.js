@@ -15,15 +15,29 @@ app.factory('Tasks', ['$resource', function($resource) {
     return Task;
 }]);
 
-app.directive('dvTaskCard', function() {
+// Requires jQuery for effects
+app.directive('dvTaskCard', ['$timeout', function($timeout) {
     return {
         restrict: 'EA',
-        scope: { task: '=task' },
+        scope: {
+            task: '=task',
+        },
         templateUrl: '/fragments/task_card.html',
         link: function(scope, elem, attr) {
+            scope.complete = function(task) {
+                elem.animate({ opacity: 0.5 }, 400, function() {
+                    $(this).animate({ left: "150%" }, 600, function() {
+                        $(this).hide();
+                    });
+                });
+
+                //elem.addClass("completed");
+                //$timeout(function() { elem.left = "150%"; }, 250);
+                task.$complete();
+            };
         }
     }
-});
+}]);
 
 app.controller('TaskListCtrl', ['$scope', '$timeout', 'Tasks', function($scope, $timeout, Tasks) {
     $scope.tasks = [];

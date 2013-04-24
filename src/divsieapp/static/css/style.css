@@ -39,6 +39,7 @@ ul {
     padding: 16px;
     margin-top: 24px;
     /* border-radius: 4px; */
+    position: relative;
 }
 
 .card .details {
@@ -82,6 +83,10 @@ ul {
 
 .actions .btn span {
     margin-right: 9px;
+}
+
+.card.completed {
+    opacity: 0.5;
 }
 
 @media (max-width: 979px) {
