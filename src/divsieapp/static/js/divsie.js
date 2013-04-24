@@ -131,7 +131,7 @@ app.controller('SettingsCtrl', ['$scope', 'Tasks', function($scope, Tasks) {
 
 app.config(['$routeProvider', function($routeProvider) {
     $routeProvider
-        .when('/list', { templateUrl: 'fragments/task_list.html', title: 'List', controller: 'TaskListCtrl' })
+        .when('/list', { templateUrl: 'fragments/task_list.html', title: 'Tasks', controller: 'TaskListCtrl' })
         .when('/now', { templateUrl: 'fragments/task_now.html', title: 'Now', controller: 'TaskNowCtrl' })
         .when('/settings', { templateUrl: 'fragments/settings.html', title: 'Settings', controller: 'SettingsCtrl' })
         .otherwise({ redirectTo: '/list' });

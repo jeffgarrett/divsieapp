@@ -1,11 +1,24 @@
-@import url(https://fonts.googleapis.com/css?family=Raleway);
+@import url(https://fonts.googleapis.com/css?family=Gabriela|Raleway);
+
+/* Default font */
+* {
+    font-family: 'Raleway', sans-serif;
+}
 
 form#request_invite {
     margin-top: 125px;
 }
 
+.brand * {
+    font-family: 'Gabriela';
+}
+
 .brand a {
     color: #777;
+}
+
+.nav {
+    font-family: 'Raleway';
 }
 
 #nav_menu {
@@ -121,3 +134,9 @@ ul {
 .settings .divider {
     border-bottom: 1px solid black;
 }
+
+h2 {
+    font-family: 'Gabriela';
+}
+
+
