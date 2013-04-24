@@ -15,6 +15,31 @@ app.factory('Tasks', ['$resource', function($resource) {
     return Task;
 }]);
 
+app.directive('file', function() {
+    return {
+        restrict: 'E',
+        scope: {},
+        template: '<span ng-transclude />',
+        replace: true,
+        transclude: true,
+        require: 'ngModel',
+        link: function(scope, element, attr, ctrl) {
+            // Hidden input element, behind a proxy element
+            var fileInput = $('<input />')
+                .attr('type', 'file')
+                .on('change', function() {
+                    scope.$apply(function() {
+                        attr.multiple ? ctrl.$setViewValue(fileInput[0].files) : ctrl.$setViewValue(fileInput[0].files[0]);
+                    });
+                });
+
+            element.on('click', function() {
+                fileInput.click();
+            });
+        }
+    }
+});
+
 // Requires jQuery for effects
 app.directive('dvTaskCard', ['$timeout', function($timeout) {
     return {
