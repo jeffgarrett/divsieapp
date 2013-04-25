@@ -18,12 +18,20 @@ form#request_invite {
     border-top-left-radius: 20px;
     border-bottom-left-radius: 20px;
     padding-left: 10px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    margin-top: 4px;
 }
 
 .navsearch .add-on {
     border-top-right-radius: 20px !important;
     border-bottom-right-radius: 20px !important;
-    padding-right: 10px;
+    padding-right: 5px;
+    padding-left: 1px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    margin-top: 4px;
+    font-size: 12px;
 }
 
 .navbar-inner {

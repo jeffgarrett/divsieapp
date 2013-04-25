@@ -15,6 +15,62 @@ app.factory('Tasks', ['$resource', function($resource) {
     return Task;
 }]);
 
+app.factory('Search', ['$rootScope', '$timeout', function($rootScope, $timeout) {
+    var timer;
+
+    var search = function(name, text) {
+        if (text === undefined) {
+            return;
+        }
+
+        if (timer !== undefined) {
+            $timeout.cancel(timer);
+        }
+
+        timer = $timeout(function() {
+            $rootScope.$broadcast('search', { name: name, text: text });
+        }, 200);
+    };
+
+    var on = function(name, callback) {
+        $rootScope.$on('search', function(evt, args) {
+            if (args.name == name) {
+                callback(args.text);
+            }
+        });
+    };
+
+    return {
+        search: search,
+        on: on
+    };
+}]);
+
+app.directive('search', ['Search', function(Search) {
+    return {
+        restrict: 'E',
+        scope: {
+            placeholder: '@',
+            name: '@'
+        },
+        template: '<span class="input-append"><input type="search" placeholder="{{placeholder}}" ng-model="text"><i class="add-on icon-search"></i></span>',
+        replace: true,
+        link: function(scope, element, attrs) {
+            scope.$watch('text', function(text) {
+                Search.search(scope.name, text);
+            });
+            element.on('focusin', function() {
+                // expand
+                element.children('input').animate({ 'width': '400px' }, 500);
+            });
+            element.on('focusout', function() {
+                // contract
+                element.children('input').animate({ 'width': '200px' }, 500);
+            });
+        }
+    }
+}]);
+
 app.directive('file', function() {
     return {
         restrict: 'E',
@@ -23,7 +79,7 @@ app.directive('file', function() {
         replace: true,
         transclude: true,
         require: 'ngModel',
-        link: function(scope, element, attr, ctrl) {
+        link: function(scope, element, attrs, ctrl) {
             // Hidden input element, behind a proxy element
             var fileInput = $('<input />')
                 .attr('type', 'file')
@@ -64,7 +120,7 @@ app.directive('dvTaskCard', ['$timeout', function($timeout) {
     }
 }]);
 
-app.controller('TaskListCtrl', ['$scope', '$timeout', 'Tasks', function($scope, $timeout, Tasks) {
+app.controller('TaskListCtrl', ['$scope', '$timeout', 'Tasks', 'Search', function($scope, $timeout, Tasks, Search) {
     $scope.tasks = [];
     $scope.offset = 0;
     $scope.more = true;
@@ -99,6 +155,8 @@ app.controller('TaskListCtrl', ['$scope', '$timeout', 'Tasks', function($scope, 
 
     var filter_timeout;
     $scope.switchFilter = function(newValue) {
+        $scope.task_filter = newValue;
+
         // Wait for a break in typing
         if (filter_timeout) {
             $timeout.cancel(filter_timeout);
@@ -106,7 +164,8 @@ app.controller('TaskListCtrl', ['$scope', '$timeout', 'Tasks', function($scope, 
 
         filter_timeout = $timeout(function() { $scope.extendList(true); }, 500);
     };
-    $scope.$watch('task_filter', $scope.switchFilter);
+
+    Search.on('navsearch', $scope.switchFilter);
 }]);
 
 app.controller('TaskNowCtrl', ['$scope', 'Tasks', function($scope, Tasks) {

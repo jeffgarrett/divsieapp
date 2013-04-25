@@ -30,10 +30,7 @@
 {% endif %}
             </ul>
 {% if user %}
-            <div class="input-append pull-right navsearch">
-                <input ng-model="task_filter" type="search" placeholder="Search or Add...">
-                <i class="add-on icon-search"></i>
-            </div>
+            <search name="navsearch" placeholder="Search or Add..." class="pull-right navsearch" />
 {% endif %}
         </div>
     </div>
