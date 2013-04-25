@@ -9,6 +9,12 @@ form#request_invite {
     margin-top: 125px;
 }
 
+.navbar-inner {
+    background-image: none;
+    opacity: 0.95;
+    background-color: #fcfcfe;
+}
+
 .brand * {
     font-family: 'Gabriela';
 }
