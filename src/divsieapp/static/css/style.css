@@ -21,6 +21,9 @@ form#request_invite {
     padding-top: 0px;
     padding-bottom: 0px;
     margin-top: 4px;
+    border-right: none;
+    /* box-shadow: inset -1px 1px 1px rgba(0,0,0,0.075); */
+    box-shadow: none;
 }
 
 .navsearch .add-on {
@@ -32,6 +35,13 @@ form#request_invite {
     padding-bottom: 0px;
     margin-top: 4px;
     font-size: 12px;
+    background: white;
+    margin-left: -2px;
+    border-left: none;
+    position: absolute;
+    /* box-shadow: inset -1px 1px 1px rgba(0,0,0,0.075); */
+    box-shadow: none;
+    z-index: 2;
 }
 
 .navbar-inner {
