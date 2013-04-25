@@ -29,6 +29,12 @@
                 <li><a href="{{auth_url}}">Login</a></li>
 {% endif %}
             </ul>
+{% if user %}
+            <div class="input-append pull-right navsearch">
+                <input ng-model="task_filter" type="search" placeholder="Search or Add...">
+                <i class="add-on icon-search"></i>
+            </div>
+{% endif %}
         </div>
     </div>
 </div>

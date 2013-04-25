@@ -9,6 +9,23 @@ form#request_invite {
     margin-top: 125px;
 }
 
+.navsearch {
+    padding-top: 5px;
+    margin-right: 20px;
+}
+
+.navsearch input {
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    padding-left: 10px;
+}
+
+.navsearch .add-on {
+    border-top-right-radius: 20px !important;
+    border-bottom-right-radius: 20px !important;
+    padding-right: 10px;
+}
+
 .navbar-inner {
     background-image: none;
     opacity: 0.95;
