@@ -127,10 +127,24 @@ app.directive('dvTaskCard', ['$timeout', function($timeout) {
 }]);
 
 app.controller('TaskListCtrl', ['$scope', '$timeout', 'Tasks', 'Search', function($scope, $timeout, Tasks, Search) {
+    $scope._tasks = [];
     $scope.tasks = [];
     $scope.offset = 0;
     $scope.more = true;
     $scope.task_filter = '';
+
+    var filterTasks = function(tasks) {
+        var r = [];
+        var f = $scope.task_filter.toLowerCase();
+        for (var i = 0; i < tasks.length; i++) {
+            var t = tasks[i].title.toLowerCase();
+
+            if (t.indexOf(f) != -1) {
+                r.push(tasks[i]);
+            }
+        }
+        return r;
+    };
 
     $scope.loading = false;
     $scope.extendList = function(clearTasks) {
@@ -144,14 +158,16 @@ app.controller('TaskListCtrl', ['$scope', '$timeout', 'Tasks', 'Search', functio
         if (clearTasks) {
             $scope.offset = 0;
         }
-        var wrapper = Tasks.query({ filter: $scope.task_filter, offset: $scope.offset }, function () {
+        var wrapper = Tasks.query({ offset: $scope.offset }, function () {
             if (clearTasks) {
+                $scope._tasks = [];
                 $scope.tasks = [];
             }
-            angular.forEach(wrapper.tasks, function(m) { $scope.tasks.push(new Tasks(m)); });
+            angular.forEach(wrapper.tasks, function(m) { $scope._tasks.push(new Tasks(m)); });
             $scope.offset = wrapper.offset;
             $scope.more = wrapper.more;
             $scope.loading = false;
+            $scope.tasks = filterTasks($scope._tasks);
         },
         function() {
             $scope.loading = false;
@@ -168,7 +184,10 @@ app.controller('TaskListCtrl', ['$scope', '$timeout', 'Tasks', 'Search', functio
             $timeout.cancel(filter_timeout);
         }
 
-        filter_timeout = $timeout(function() { $scope.extendList(true); }, 500);
+        filter_timeout = $timeout(function() {
+            //$scope.extendList(true);
+            $scope.tasks = filterTasks($scope._tasks);
+        }, 500);
     };
 
     Search.on('navsearch', $scope.switchFilter);

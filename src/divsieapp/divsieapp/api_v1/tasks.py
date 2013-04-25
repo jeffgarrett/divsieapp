@@ -2,7 +2,6 @@ from google.appengine.ext import ndb
 from cornice.resource import resource, view
 from divsieapp import models
 from divsieapp.lib import calendar
-from divsieapp.lib import filters
 import logging
 
 
@@ -52,31 +51,15 @@ class Task(object):
         except:
             offset = 0
 
-        try:
-            filterstr = self.request.GET.getone('filter')
-        except:
-            filterstr = ''
+        queries = 1
 
-        qlimit = limit * (1 + 200 * len(filterstr))
-
-        queries = 0
-
-        f = filters.Filter(filterstr)
         more = True
-        retval = []
-        cursor = None
-        while more and len(retval) < limit:
-            queries += 1
-            tasks, cursor, more = models.Task.query(*ds_filters).order(models.Task.title).fetch_page(qlimit, start_cursor=cursor,
-                    read_policy=ndb.EVENTUAL_CONSISTENCY)
-            if not tasks:
-                more = False
-                break
-            matching = [t for t in tasks if f.match(t)]
-            retval.extend(matching)
-            offset += qlimit
+        tasks = models.Task.query(*ds_filters).order(models.Task.title).fetch(limit, offset=offset)
+        if not tasks:
+            more = False
+        offset += limit
 
-        return { "tasks": retval, "offset": offset, "more": more, "queries": queries }
+        return { "tasks": tasks, "offset": offset, "more": more, "queries": queries }
 
     @view(accept='text/calendar', renderer='json')
     def collection_post(self):
