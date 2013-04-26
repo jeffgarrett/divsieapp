@@ -172,6 +172,11 @@ app.directive('search', ['Search', function(Search) {
                 // contract
                 element.children('input').animate({ 'width': '200px' }, 500);
             });
+            element.children('.icon-remove').on('click', function() {
+                scope.$apply(function() {
+                    scope.text = '';
+                });
+            });
         }
     }
 }]);

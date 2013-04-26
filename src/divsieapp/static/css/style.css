@@ -45,6 +45,16 @@ form#request_invite {
     visibility: hidden;
 }
 
+.navsearch .icon-remove:hover {
+    opacity: 0.75;
+}
+
+.navsearch .icon-remove:active {
+    position: relative;
+    top: 1px;
+    left: 1px;
+}
+
 .navbar-inner {
     background-image: none;
     opacity: 0.95;
