@@ -1,8 +1,82 @@
 var app = angular.module('divsie', ['ngResource', 'infinite-scroll']);
 
-app.factory('Tasks', ['$resource', function($resource) {
+app.factory('$localStorage', ['$window', function($window) {
+    var prefix = '';
+    var available = ('localStorage' in $window && $window.localStorage !== null);
+    var emptyFn = function() { return null; };
+    var version = emptyFn, setItem = emptyFn, getItem = emptyFn, removeItem = emptyFn, clear = emptyFn;
+
+    if (available) {
+        var storage = $window.localStorage;
+
+        version = function(a, v) {
+            var app = a + '|';
+            prefix = app + v + '|';
+
+            var oldKeys = [];
+            for (var i = 0; i < storage.length; i++)
+            {
+                var key = storage.key(i);
+                if (key.indexOf(app) == 0) {
+                    if (key.indexOf(prefix) != 0) {
+                        oldKeys.push(key);
+                    }
+                }
+            }
+
+            for (var i = 0; i < oldKeys.length; i++)
+            {
+                storage.removeItem(oldKeys[i]);
+            }
+        };
+
+        setItem = function(key, val) {
+            storage.setItem(prefix + key, JSON.stringify(val));
+        };
+
+        getItem = function(key) {
+            return JSON.parse(storage.getItem(prefix + key));
+        };
+
+        removeItem = function(key) {
+            storage.removeItem(prefix + key);
+        };
+
+        clear = function() {
+            var keys = [];
+            for (var i = 0; i < storage.length; i++)
+            {
+                var key = storage.key(i);
+                if (key.indexOf(prefix) == 0) {
+                    keys.push(key);
+                }
+            }
+
+            for (var i = 0; i < keys.length; i++)
+            {
+                storage.removeItem(keys[i]);
+            }
+        };
+    }
+
+    return {
+        'version': version,
+        'setItem': setItem,
+        'getItem': getItem,
+        'removeItem': removeItem,
+        'clear': clear
+    };
+}]);
+
+app.factory('Tasks', ['$resource', '$localStorage', function($resource, $localStorage) {
     var Task = $resource('api/v1/tasks/:id', { id: '@id' },
         { query: { method: 'GET', isArray: false } });
+
+    Task.prototype._save = Task.prototype.$save;
+    Task.prototype.$save = function(success, error) {
+        $localStorage.setItem('task:' + this.id, this);
+        this._save(success, error);
+    };
 
     Task.prototype.$complete = function(success, error) {
         if (!this.completed) {
@@ -15,8 +89,8 @@ app.factory('Tasks', ['$resource', function($resource) {
     return Task;
 }]);
 
-app.factory('Search', ['$rootScope', '$timeout', function($rootScope, $timeout) {
-    var timer;
+app.factory('Search', ['$rootScope', '$timeout', '$localStorage', function($rootScope, $timeout, $localStorage) {
+    var timer, searches;
 
     var search = function(name, text) {
         if (text === undefined) {
@@ -28,9 +102,15 @@ app.factory('Search', ['$rootScope', '$timeout', function($rootScope, $timeout) 
         }
 
         timer = $timeout(function() {
+            searches[name] = text;
+            $localStorage.setItem('Search', searches);
             $rootScope.$broadcast('search', { name: name, text: text });
         }, 200);
     };
+
+    var get = function(name) {
+        return searches[name];
+    }
 
     var on = function(name, callback) {
         $rootScope.$on('search', function(evt, args) {
@@ -38,10 +118,24 @@ app.factory('Search', ['$rootScope', '$timeout', function($rootScope, $timeout) 
                 callback(args.text);
             }
         });
+
+        // Trigger event for late binders
+        var lastSearch = searches[name];
+        if (lastSearch !== undefined && lastSearch !== '') {
+            search(name, lastSearch);
+        }
     };
+
+    // Initialization
+    searches = $localStorage.getItem('Search');
+    if (searches === undefined) {
+        searches = {};
+        $localStorage.setItem('Search', searches);
+    }
 
     return {
         search: search,
+        get: get,
         on: on
     };
 }]);
@@ -56,6 +150,7 @@ app.directive('search', ['Search', function(Search) {
         template: '<span class="input-append"><input type="search" placeholder="{{placeholder}}" ng-model="text"><i class="add-on icon-search"></i></span>',
         replace: true,
         link: function(scope, element, attrs) {
+            scope.text = Search.get(scope.name);
             scope.$watch('text', function(text) {
                 Search.search(scope.name, text);
             });
@@ -222,10 +317,9 @@ app.config(['$routeProvider', function($routeProvider) {
 
 }]);
 
-app.run(['$rootScope', function($rootScope) {
+app.run(['$rootScope', '$localStorage', function($rootScope, $localStorage) {
+    $localStorage.version('divsie', 'v1');
     $rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
-        if (current.$route) {
-            $rootScope.title = current.$route.title;
-        }
+        $rootScope.title = current.title;
     });
 }]);
