@@ -19,11 +19,12 @@ form#request_invite {
     background: none;
     padding-top: 0px;
     padding-bottom: 0px;
-    padding-right: 22px;
+    padding-right: 40px;
+    padding-left: 8px;
     margin-top: 4px;
 
     position: relative;
-    right: -22px;
+    right: -40px;
 }
 
 .navsearch .add-on {
@@ -36,6 +37,12 @@ form#request_invite {
     padding-right: 0px;
     margin-top: 5px;
     margin-left: 0px;
+    color: #777;
+    opacity: 0.5;
+}
+
+.navsearch .icon-remove {
+    visibility: hidden;
 }
 
 .navbar-inner {

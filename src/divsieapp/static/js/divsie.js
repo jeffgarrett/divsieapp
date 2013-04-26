@@ -147,11 +147,21 @@ app.directive('search', ['Search', function(Search) {
             placeholder: '@',
             name: '@'
         },
-        template: '<span class="input-append"><input type="search" placeholder="{{placeholder}}" ng-model="text"><i class="add-on icon-search"></i></span>',
+        template: '<span class="input-append"><input type="search" placeholder="{{placeholder}}" ng-model="text"><i class="add-on icon-remove"></i><i class="add-on icon-search"></i></span>',
         replace: true,
         link: function(scope, element, attrs) {
+            var removeIcon = false;
+
             scope.text = Search.get(scope.name);
             scope.$watch('text', function(text) {
+                if (removeIcon && text == '') {
+                    removeIcon = false;
+                    element.children('.icon-remove').css('visibility', 'hidden');
+                }
+                else if (!removeIcon && text != '') {
+                    removeIcon = true;
+                    element.children('.icon-remove').css('visibility', 'visible');
+                }
                 Search.search(scope.name, text);
             });
             element.on('focusin', function() {
