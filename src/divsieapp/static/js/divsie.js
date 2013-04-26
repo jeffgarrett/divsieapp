@@ -156,16 +156,10 @@ app.directive('search', ['Search', function(Search) {
             });
             element.on('focusin', function() {
                 // expand
-                // element.children().css('box-shadow', 'inset -1px 1px 1px rgba(0,0,0,0.075), 1px 0px 1px rgba(82,168,236,0.6)');
-                element.children().css('box-shadow', 'none');
-                element.children().css('border-color', 'rgba(82,168,236,0.8)');
                 element.children('input').animate({ 'width': '400px' }, 500);
             });
             element.on('focusout', function() {
                 // contract
-                // element.children().css('box-shadow', 'inset -1px 1px 1px rgba(0,0,0,0.075)');
-                element.children().css('box-shadow', 'none');
-                element.children().css('border-color', '#ccc');
                 element.children('input').animate({ 'width': '200px' }, 500);
             });
         }
