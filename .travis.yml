@@ -5,4 +5,4 @@ before_script:
   - python bootstrap.py --distribute
   - ./bin/buildout
   - cd src/divsieapp
-script: ../../bin/python src/divsieapp/setup.py test
+script: ../../bin/python setup.py test
