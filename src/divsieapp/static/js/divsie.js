@@ -101,11 +101,11 @@ app.factory('Search', ['$rootScope', '$timeout', '$localStorage', function($root
             $timeout.cancel(timer);
         }
 
-        timer = $timeout(function() {
+        //timer = $timeout(function() {
             searches[name] = text;
             $localStorage.setItem('Search', searches);
             $rootScope.$broadcast('search', { name: name, text: text });
-        }, 200);
+        //}, 200);
     };
 
     var get = function(name) {
@@ -166,11 +166,11 @@ app.directive('search', ['Search', function(Search) {
             });
             element.on('focusin', function() {
                 // expand
-                element.children('input').animate({ 'width': '400px' }, 500);
+                //element.children('input').animate({ 'width': '400px' }, 500);
             });
             element.on('focusout', function() {
                 // contract
-                element.children('input').animate({ 'width': '200px' }, 500);
+                //element.children('input').animate({ 'width': '200px' }, 500);
             });
             element.children('.icon-remove').on('click', function() {
                 scope.$apply(function() {
@@ -238,13 +238,44 @@ app.controller('TaskListCtrl', ['$scope', '$timeout', 'Tasks', 'Search', functio
     $scope.task_filter = '';
 
     var filterTasks = function(tasks) {
-        var r = [];
-        var f = $scope.task_filter.toLowerCase();
-        for (var i = 0; i < tasks.length; i++) {
-            var t = tasks[i].title.toLowerCase();
+        var r = tasks.slice(0);
+        var tokens = $scope.task_filter.split(' ');
 
-            if (t.indexOf(f) != -1) {
-                r.push(tasks[i]);
+        for (var i = 0; i < tokens.length; i++)
+        {
+            var t = tokens[i].toLowerCase();
+            if (t === '') {
+                continue;
+            }
+
+            for (var j = 0; j < r.length; j++)
+            {
+                // Match the token against the title
+                var title = r[j].title.toLowerCase();
+                if (title.indexOf(t) !== -1) {
+                    continue;
+                }
+
+                // Or match the token against the tags
+                var match = false;
+                if (t.charAt(0) === '#') {
+                    t = t.slice(1);
+                }
+                for (var k = 0; k < r[j].tags.length; k++)
+                {
+                    var tag = r[j].tags[k].toLowerCase();
+                    if (tag.indexOf(t) !== -1) {
+                        match = true;
+                        break;
+                    }
+                }
+
+                if (match) {
+                    continue;
+                }
+
+                r = r.slice(0,j).concat(r.slice(j+1));
+                j = j-1;
             }
         }
         return r;
@@ -285,13 +316,13 @@ app.controller('TaskListCtrl', ['$scope', '$timeout', 'Tasks', 'Search', functio
 
         // Wait for a break in typing
         if (filter_timeout) {
-            $timeout.cancel(filter_timeout);
+            //$timeout.cancel(filter_timeout);
         }
 
-        filter_timeout = $timeout(function() {
+        //filter_timeout = $timeout(function() {
             //$scope.extendList(true);
             $scope.tasks = filterTasks($scope._tasks);
-        }, 500);
+        //}, 500);
     };
 
     Search.on('navsearch', $scope.switchFilter);
