@@ -3,5 +3,6 @@ python:
   - "2.7"
 before_script:
   - python bootstrap.py --distribute
+  - ./bin/buildout
   - cd src/divsieapp
 script: ../../bin/python src/divsieapp/setup.py test
