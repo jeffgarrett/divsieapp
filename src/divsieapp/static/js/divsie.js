@@ -128,7 +128,7 @@ app.factory('Search', ['$rootScope', '$timeout', '$localStorage', function($root
 
     // Initialization
     searches = $localStorage.getItem('Search');
-    if (searches === undefined) {
+    if (searches === null) {
         searches = {};
         $localStorage.setItem('Search', searches);
     }
