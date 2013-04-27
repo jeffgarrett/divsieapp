@@ -1,16 +1,25 @@
 <div class="settings">
     <div class="section">
-        <h2>Import from iCalendar</h2>
+        <h2>Import from an iCalendar File</h2>
         <p>
             iCalendar is a standard file format for storing calendar
-            events and tasks.
+            events and tasks. This can be used to import tasks from
+            Remember the Milk. <a href="#">Learn more</a>
         </p>
 
-        <file ng-model="$parent.icalFile" class="btn btn-primary">Import iCalendar</a>
+        <div class="settings-btn">
+            <file ng-model="$parent.icalFile" class="btn btn-primary">Import from iCalendar</a>
+        </div>
     </div>
     <hr />
     <div class="section">
         <h2>Danger!!!</h2>
-        <a class="btn btn-danger" ng-click="deleteTasks()">Delete all tasks</a>
+        <p>
+            These actions cannot be undone. Please be careful!
+        </p>
+        <div class="settings-btn">
+            <button type="button" class="btn btn-danger" ng-click="deleteTasks()">Delete all my tasks</a>
+            <button type="button" class="btn btn-danger" ng-click="">Delete my account</a>
+        </div>
     </div>
 </div>
