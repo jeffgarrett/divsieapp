@@ -64,7 +64,7 @@ handlers:
   secure: always
 
 - url: /.*
-  script: divsieapp.application
+  script: divsieapp.app.application
   secure: always
 
 builtins:
