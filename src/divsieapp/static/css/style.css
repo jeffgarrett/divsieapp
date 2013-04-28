@@ -22,6 +22,15 @@ form#request_invite {
     margin-left: 20px;
 }
 
+.modal {
+    border-radius: 0px;
+}
+
+.modal-header {
+    border-bottom: none;
+    font-family: Gabriela;
+}
+
 .navsearch {
     padding-top: 5px;
     width: 1170px;

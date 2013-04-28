@@ -1,4 +1,4 @@
-var app = angular.module('divsie', ['ngResource', 'infinite-scroll']);
+var app = angular.module('divsie', ['ngResource', 'ui.bootstrap', 'infinite-scroll']);
 
 app.factory('$localStorage', ['$window', function($window) {
     var prefix = '';
@@ -350,9 +350,18 @@ app.controller('TaskNowCtrl', ['$scope', 'Tasks', function($scope, Tasks) {
     $scope.refresh();
 }]);
 
-app.controller('SettingsCtrl', ['$scope', 'Tasks', function($scope, Tasks) {
+app.controller('SettingsCtrl', ['$scope', '$dialog', 'Tasks', function($scope, $dialog, Tasks) {
     $scope.deleteTasks = function() {
-        Tasks.delete();
+        var title = 'Delete all tasks';
+        var msg = 'This cannot be undone. Are you sure you want to delete all tasks?';
+        var btns = [{ result: 'cancel', label: 'Cancel'}, { result: 'delete', label: 'Delete', cssClass: 'btn-danger' }];
+
+        $dialog.messageBox(title, msg, btns).open()
+            .then(function(result) {
+                if (result == 'delete') {
+                    Tasks.delete();
+                }
+            });
     };
 }]);
 
