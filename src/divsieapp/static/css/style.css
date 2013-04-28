@@ -144,12 +144,14 @@ ul {
 }
 
 .card .details {
-    display: none;
+    /* display: none; */
+    display: block;
     font-size: 12px;
 }
 
 .card .actions {
-    display: none;
+    /* display: none; */
+    display: block;
     margin-top: 16px;
     margin-left: -17px;
     margin-right: -20px;
@@ -157,11 +159,11 @@ ul {
 }
 
 .card:hover .details {
-    display: block;
+    /* display: block; */
 }
 
 .card:hover .actions {
-    display: block;
+    /* display: block; */
 }
 
 .actions .btn {
