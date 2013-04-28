@@ -141,6 +141,7 @@ ul {
     margin-top: 24px;
     /* border-radius: 4px; */
     position: relative;
+    overflow: hidden;
 }
 
 .card .details {
@@ -195,6 +196,21 @@ ul {
 @media (max-width: 979px) {
     #nav_menu {
         margin-top: 6px;
+    }
+
+    .navbar-fixed-top, .navbar-fixed-bottom {
+        position: fixed;
+    }
+
+    .navsearch {
+        display: none;
+    }
+}
+
+@media (max-width: 767px) {
+    .navbar-fixed-top, .navbar-fixed-bottom, .navbar-static-top {
+        margin-left: 0px;
+        margin-right: 0px;
     }
 }
 
