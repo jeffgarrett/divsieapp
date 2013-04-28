@@ -4,7 +4,7 @@ class Task(ndb.Model):
     user_id = ndb.IntegerProperty()
     user_context = ndb.StringProperty()
 
-    current = ndb.BooleanProperty(default=False)
+    active = ndb.BooleanProperty(default=False)
 
     completed = ndb.BooleanProperty()
     completion_time = ndb.DateTimeProperty()

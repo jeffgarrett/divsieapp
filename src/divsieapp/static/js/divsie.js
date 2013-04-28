@@ -78,6 +78,11 @@ app.factory('Tasks', ['$resource', '$localStorage', function($resource, $localSt
         this._save(success, error);
     };
 
+    Task.prototype.$start = function(success, error) {
+        this.active = true;
+        this.$save(success, error);
+    };
+
     Task.prototype.$complete = function(success, error) {
         if (!this.completed) {
             this.completed = true;
@@ -215,6 +220,9 @@ app.directive('dvTaskCard', ['$timeout', function($timeout) {
         },
         templateUrl: '/fragments/task_card.html',
         link: function(scope, elem, attr) {
+            scope.start = function(task) {
+                task.$start();
+            };
             scope.complete = function(task) {
                 elem.animate({ opacity: 0.5 }, 400, function() {
                     $(this).animate({ left: "150%" }, 600, function() {
@@ -332,7 +340,7 @@ app.controller('TaskNowCtrl', ['$scope', 'Tasks', function($scope, Tasks) {
     $scope.tasks = [];
 
     $scope.refresh = function() {
-        var wrapper = Tasks.query({ current: true }, function () {
+        var wrapper = Tasks.query({ active: true }, function () {
             angular.forEach(wrapper.tasks, function(m) { $scope.tasks.push(new Tasks(m)); });
             /* $scope.tasks = $scope.tasks.concat(wrapper.tasks); */
             $scope.loading = false;

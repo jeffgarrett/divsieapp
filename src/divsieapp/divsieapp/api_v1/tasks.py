@@ -31,9 +31,9 @@ class Task(object):
         ds_filters.append(models.Task.completed == completed)
 
         try:
-            logging.info(self.request.GET.getone('current'))
-            current = (self.request.GET.getone('current') == "true")
-            ds_filters.append(models.Task.current == current)
+            logging.info(self.request.GET.getone('active'))
+            active = (self.request.GET.getone('active') == "true")
+            ds_filters.append(models.Task.active == active)
         except:
             pass
 
@@ -100,6 +100,10 @@ class Task(object):
         if 'completed' in task_in:
             if task_in['completed'] != task.completed:
                 task.completed = task_in['completed']
+                task.put()
+        if 'active' in task_in:
+            if task_in['active'] != task.active:
+                task.active = task_in['active']
                 task.put()
 
         return task

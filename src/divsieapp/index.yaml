@@ -8,7 +8,8 @@ indexes:
 
 - kind: Task
   properties:
+  - name: active
   - name: completed
-  - name: current
   - name: user_id
   - name: title
+
