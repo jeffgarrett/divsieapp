@@ -1,6 +1,5 @@
 from google.appengine.api import urlfetch
-from google.appengine.ext import ndb
-from divsieapp.keys import google_client_id, google_client_secret
+from divsieapp.models import Secret
 import json
 import logging
 import os
@@ -37,7 +36,7 @@ class GoogleOAuth2:
     def get_auth_url(self):
         params = {
             "response_type": self.response_type,
-            "client_id": google_client_id, 
+            "client_id": Secret.get_secret('google_client_id').value, 
             "redirect_uri": self.redirect_uri,
             "scope": self.scope,
             "access_type": self.access_type
@@ -62,8 +61,8 @@ class GoogleOAuth2:
 
         payload = {
             "code": authorization_code,
-            "client_id": google_client_id,
-            "client_secret": google_client_secret,
+            "client_id": Secret.get_secret('google_client_id').value,
+            "client_secret": Secret.get_secret('google_client_secret').value,
             "redirect_uri": self.redirect_uri,
             "grant_type": "authorization_code"
         }

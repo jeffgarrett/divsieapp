@@ -7,12 +7,13 @@ from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.security import unauthenticated_userid
 
+import uuid
 import cornice
 from resources import Root
 import models
 import views
 import pyramid_jinja2
-from keys import auth_secret
+from divsieapp.models import Secret
 import os, time, logging
 
 import api_v1
@@ -47,8 +48,14 @@ def groupfinder(userid, request):
 def make_app():
     """ This function returns a Pyramid WSGI application.
     """
+
+    auth_secret = Secret.get_secret('auth_secret')
+    if not auth_secret.value:
+        auth_secret.value = uuid.uuid4().hex
+        auth_secret.put()
+
     authn_policy = AuthTktAuthenticationPolicy(
-                       auth_secret,
+                       auth_secret.value,
                        callback=groupfinder,
                        cookie_name='divsie_auth',
                        secure=True,
