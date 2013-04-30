@@ -6,3 +6,6 @@ before_script:
   - ./bin/buildout
   - cd src/divsieapp
 script: ../../bin/python setup.py test
+notifications:
+  email:
+    - jeff@jgarrett.org
