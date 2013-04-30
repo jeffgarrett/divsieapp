@@ -252,6 +252,8 @@ app.controller('TaskListCtrl', ['$scope', '$timeout', 'Tasks', 'Search', functio
         for (var i = 0; i < tokens.length; i++)
         {
             var t = tokens[i].toLowerCase();
+            t = t.replace(/[\.,-\/#!$%\^&\*;:{}=\-_`~()]/g,"");
+
             if (t === '') {
                 continue;
             }
@@ -260,6 +262,7 @@ app.controller('TaskListCtrl', ['$scope', '$timeout', 'Tasks', 'Search', functio
             {
                 // Match the token against the title
                 var title = r[j].title.toLowerCase();
+                title = title.replace(/[\.,-\/#!$%\^&\*;:{}=\-_`~()]/g,"")
                 if (title.indexOf(t) !== -1) {
                     continue;
                 }
