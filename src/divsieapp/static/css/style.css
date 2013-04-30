@@ -144,6 +144,15 @@ ul {
     overflow: hidden;
 }
 
+.card-edit {
+    display: none;
+    width: 100%;
+    box-sizing: border-box;
+    border: none;
+    box-shadow: none;
+    resize: none;
+}
+
 .card .details {
     /* display: none; */
     display: block;

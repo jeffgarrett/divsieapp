@@ -214,14 +214,33 @@ app.directive('file', function() {
 // Requires jQuery for effects
 app.directive('dvTaskCard', ['$timeout', function($timeout) {
     return {
-        restrict: 'EA',
+        restrict: 'E',
         scope: {
             task: '=task',
         },
         templateUrl: '/fragments/task_card.html',
-        link: function(scope, elem, attr) {
+        replace: true,
+        link: function(scope, element, attrs) {
+            var tags = [];
+            angular.forEach(scope.task.tags, function(tag) {
+                this.push('#' + tag);
+            }, tags);
+            scope.editText = scope.task.title + '\n' + scope.task.description + '\n' + tags.join(' ');
+
+            scope.$watch('editText', function(editText) {
+                var area = element.children('.card-edit');
+                area.css('height', 'auto');
+                area.css('height', area[0].scrollHeight + 'px');
+            });
             scope.start = function(task) {
                 task.$start();
+            };
+            scope.edit = function(task) {
+                element.children('.card-noedit').hide();
+                element.children('.card-edit').show();
+                var area = element.children('.card-edit');
+                area.css('height', 'auto');
+                area.css('height', area[0].scrollHeight + 'px');
             };
             scope.complete = function(task) {
                 elem.animate({ opacity: 0.5 }, 400, function() {
