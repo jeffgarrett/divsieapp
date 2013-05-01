@@ -91,6 +91,47 @@ app.factory('Tasks', ['$resource', '$localStorage', function($resource, $localSt
         }
     };
 
+    Task.prototype.$parse = function(s) {
+        var lines = s.split('\n');
+        var tags = [];
+
+        for (var i = lines.length-1; i >= 0; i--)
+        {
+            if (lines[i] == '') {
+                lines.pop();
+                continue;
+            }
+
+            var regular_line = false;
+            var line_tags = [];
+            var words = lines[i].split(' ');
+            for (var j = 0; j < words.length; j++)
+            {
+                if (words[j] == '') {
+                    continue;
+                }
+                if (words[j].charAt(0) != '#') {
+                    regular_line = true;
+                    break;
+                }
+                line_tags.push(words[j].slice(1));
+            }
+
+            if (regular_line) {
+                break;
+            }
+
+            lines.pop();
+
+            for (var k = 0; k < line_tags.length; k++) {
+                tags.push(line_tags[k]);
+            }
+        }
+
+        this.title = lines.join('\n');
+        this.tags = tags;
+    };
+
     return Task;
 }]);
 
@@ -236,11 +277,13 @@ app.directive('dvTaskCard', ['$timeout', function($timeout) {
                 task.$start();
             };
             scope.edit = function(task) {
+                element.addClass('edit');
                 element.children('.card-noedit').hide();
                 element.children('.card-edit').show();
                 var area = element.children('.card-edit');
                 area.css('height', 'auto');
                 area.css('height', area[0].scrollHeight + 'px');
+                area[0].focus();
             };
             scope.complete = function(task) {
                 elem.animate({ opacity: 0.5 }, 400, function() {
@@ -253,6 +296,19 @@ app.directive('dvTaskCard', ['$timeout', function($timeout) {
                 //$timeout(function() { elem.left = "150%"; }, 250);
                 task.$complete();
             };
+            element.children('.card-edit').bind('blur', function() {
+                scope.$apply(function() {
+                    element.removeClass('edit');
+                    element.children('.card-edit').hide();
+                    element.children('.card-noedit').show();
+                    scope.statusText = 'Saving...'
+
+                    scope.task.$parse(scope.editText);
+                    scope.task.$save(function() {
+                        scope.statusText = 'Saved';
+                    });
+                });
+            });
         }
     }
 }]);

@@ -144,13 +144,19 @@ ul {
     overflow: hidden;
 }
 
+.card.edit {
+    box-shadow: 2px 2px 4px rgba(0,0,255,0.2);
+    border: 1px solid rgba(0,0,255,0.2);
+}
+
 .card-edit {
     display: none;
     width: 100%;
     box-sizing: border-box;
     border: none;
-    box-shadow: none;
+    box-shadow: none !important;
     resize: none;
+    padding: 0px;
 }
 
 .card .details {
