@@ -266,7 +266,10 @@ app.directive('dvTaskCard', ['$timeout', function($timeout) {
             angular.forEach(scope.task.tags, function(tag) {
                 this.push('#' + tag);
             }, tags);
-            scope.editText = scope.task.title + '\n' + scope.task.description + '\n' + tags.join(' ');
+            scope.setEditText = function() {
+                scope.editText = scope.task.title + '\n' + scope.task.description + '\n' + tags.join(' ');
+            };
+            scope.setEditText();
 
             scope.$watch('editText', function(editText) {
                 var area = element.children('.card-edit');
@@ -277,6 +280,7 @@ app.directive('dvTaskCard', ['$timeout', function($timeout) {
                 task.$start();
             };
             scope.edit = function(task) {
+                scope.setEditText();
                 element.addClass('edit');
                 element.children('.card-noedit').hide();
                 element.children('.card-edit').show();
@@ -296,6 +300,9 @@ app.directive('dvTaskCard', ['$timeout', function($timeout) {
                 //$timeout(function() { elem.left = "150%"; }, 250);
                 task.$complete();
             };
+            element.children('.card-noedit').bind('click', function() {
+                scope.edit();
+            });
             element.children('.card-edit').bind('blur', function() {
                 scope.$apply(function() {
                     element.removeClass('edit');
