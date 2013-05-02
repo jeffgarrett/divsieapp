@@ -290,7 +290,7 @@ app.directive('dvTaskCard', ['$timeout', function($timeout) {
                 area[0].focus();
             };
             scope.complete = function(task) {
-                elem.animate({ opacity: 0.5 }, 400, function() {
+                element.animate({ opacity: 0.5 }, 400, function() {
                     $(this).animate({ left: "150%" }, 600, function() {
                         $(this).hide();
                     });
