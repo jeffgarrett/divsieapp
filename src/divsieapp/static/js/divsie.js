@@ -314,6 +314,9 @@ app.directive('dvTaskCard', ['$timeout', function($timeout) {
                     scope.task.$parse(scope.editText);
                     scope.task.$save(function() {
                         scope.statusText = 'Saved';
+                        $timeout(function() {
+                            scope.statusText = '';
+                        }, 500);
                     });
                 });
             });
