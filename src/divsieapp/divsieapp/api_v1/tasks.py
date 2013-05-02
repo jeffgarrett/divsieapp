@@ -2,7 +2,7 @@ from google.appengine.ext import ndb
 from cornice.resource import resource, view
 from divsieapp import models
 from divsieapp.lib import calendar
-import logging
+import datetime, logging
 
 
 @resource(collection_path='/api/v1/tasks', path='/api/v1/tasks/{id}')
@@ -97,13 +97,25 @@ class Task(object):
             # problem
             return
 
+        changed = False
         if 'completed' in task_in:
             if task_in['completed'] != task.completed:
                 task.completed = task_in['completed']
-                task.put()
+                changed = True
         if 'active' in task_in:
             if task_in['active'] != task.active:
                 task.active = task_in['active']
-                task.put()
+                changed = True
+        if 'title' in task_in:
+            if task_in['title'] != task.title:
+                task.title = task_in['title']
+                changed = True
+        if 'tags' in task_in:
+            if task_in['tags'] != task.tags:
+                task.tags = task_in['tags']
+                changed = True
+        if changed:
+            task.last_modification_time = datetime.datetime.now()
+            task.put()
 
         return task
