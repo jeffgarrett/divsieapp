@@ -288,6 +288,7 @@ app.directive('dvTaskCard', ['$timeout', function($timeout) {
                 area.css('height', 'auto');
                 area.css('height', area[0].scrollHeight + 'px');
                 area[0].focus();
+                area[0].setSelectionRange(task.title.length, task.title.length);
             };
             scope.complete = function(task) {
                 element.animate({ opacity: 0.5 }, 400, function() {
@@ -301,7 +302,7 @@ app.directive('dvTaskCard', ['$timeout', function($timeout) {
                 task.$complete();
             };
             element.children('.card-noedit').bind('click', function() {
-                scope.edit();
+                scope.edit(scope.task);
             });
             element.children('.card-edit').bind('blur', function() {
                 scope.$apply(function() {
