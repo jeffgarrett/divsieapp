@@ -10,7 +10,7 @@ class Task(object):
     def __init__(self, request):
         self.request = request
 
-    @view(renderer='json')
+    @view(renderer='safejson')
     def collection_delete(self):
         # if not self.request.user...
         user_id = self.request.user.key.integer_id()
@@ -18,7 +18,7 @@ class Task(object):
         ndb.delete_multi([x.key for x in tasks])
         return {}
 
-    @view(renderer='json')
+    @view(renderer='safejson')
     def collection_get(self):
         # if not self.request.user...
         user_id = self.request.user.key.integer_id()
@@ -61,7 +61,7 @@ class Task(object):
 
         return { "tasks": tasks, "offset": offset, "more": more, "queries": queries }
 
-    @view(accept='text/calendar', renderer='json')
+    @view(accept='text/calendar', renderer='safejson')
     def collection_post(self):
         # if not self.request.user...
         tasks = calendar.parse(self.request.text)
@@ -83,7 +83,7 @@ class Task(object):
         ndb.put_multi(updated_models)
         return { "tasks": updated_models }
 
-    @view(renderer='json')
+    @view(renderer='safejson')
     def post(self):
         # if not self.request.user...
         task_in = self.request.json_body

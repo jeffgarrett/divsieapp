@@ -14,6 +14,7 @@ import models
 import views
 import pyramid_jinja2
 from divsieapp.models import Secret
+from divsieapp.lib.safejson import SafeJSON
 import os, time, logging
 
 import api_v1
@@ -74,6 +75,7 @@ def make_app():
     #config.add_tween('divsieapp.timing_tween_factory')
     config.add_request_method(get_user, 'user', reify=True)
     config.add_renderer('.html', pyramid_jinja2.Jinja2Renderer)
+    config.add_renderer(name='safejson', factory=SafeJSON())
     config.add_notfound_view(views.notfound, renderer='404.html')
 
     # The root page, which may be different based on user status.
