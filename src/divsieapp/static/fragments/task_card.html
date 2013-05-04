@@ -3,7 +3,7 @@
     <div class="card-noedit">
         <span ng-bind="task.content"></span><br/>
         <span ng-repeat="tag in task.tags|orderBy:tag">
-                <a href="#">#<span ng-bind="tag"></span></a>
+                <a ng-click="searchTag(tag, $event)">#<span ng-bind="tag"></span></a>
         </span>&nbsp;
     </div>
     <div class="muted" ng-bind="statusText">

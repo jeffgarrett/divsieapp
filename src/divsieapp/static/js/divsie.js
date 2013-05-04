@@ -210,6 +210,9 @@ app.directive('search', ['Search', function(Search) {
                 }
                 Search.search(scope.name, text);
             });
+            Search.on('navsearch', function(newValue) {
+                scope.text = newValue;
+            });
             element.on('focusin', function() {
                 // expand
                 //element.children('input').animate({ 'width': '400px' }, 500);
@@ -253,7 +256,7 @@ app.directive('file', function() {
 });
 
 // Requires jQuery for effects
-app.directive('dvTaskCard', ['$timeout', function($timeout) {
+app.directive('dvTaskCard', ['Search', '$timeout', function(Search, $timeout) {
     return {
         restrict: 'E',
         scope: {
@@ -303,6 +306,10 @@ app.directive('dvTaskCard', ['$timeout', function($timeout) {
                 //elem.addClass("completed");
                 //$timeout(function() { elem.left = "150%"; }, 250);
                 task.$complete();
+            };
+            scope.searchTag = function(tag, $event) {
+                Search.search('navsearch', '#' + tag);
+                $event.stopPropagation();
             };
             element.children('.card-noedit').bind('click', function() {
                 scope.edit(scope.task);
