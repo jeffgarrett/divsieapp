@@ -267,7 +267,13 @@ app.directive('dvTaskCard', ['$timeout', function($timeout) {
                 this.push('#' + tag);
             }, tags);
             scope.setEditText = function() {
-                scope.editText = scope.task.title + '\n' + scope.task.description + '\n' + tags.join(' ');
+                scope.editText = scope.task.title;
+                if (scope.task.description) {
+                    scope.editText += '\n' + scope.task.description;
+                }
+                if (tags) {
+                    scope.editText += '\n' + tags.join(' ');
+                }
             };
             scope.setEditText();
 
