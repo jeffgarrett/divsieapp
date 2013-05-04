@@ -1,46 +1,56 @@
 from google.appengine.ext import ndb
 
 class Task(ndb.Model):
+    # Owner
     user_id = ndb.IntegerProperty()
+    # Contextual intelligence, one day
     user_context = ndb.StringProperty()
-
+    # Currently being worked on (or momentarily paused)
     active = ndb.BooleanProperty(default=False)
-
+    # Completion
     completed = ndb.BooleanProperty()
     completion_time = ndb.DateTimeProperty()
-    last_modification_time = ndb.DateTimeProperty()
+    # Creation, modification
+    creation_time = ndb.DateTimeProperty()
+    modification_time = ndb.DateTimeProperty()
+    # Due
     due_time = ndb.DateTimeProperty()
-
-    title = ndb.StringProperty()
-    description = ndb.StringProperty()
-
+    # Time estimate, in minutes
+    time_estimate = ndb.IntegerProperty()
+    # Text content
+    content = ndb.StringProperty()
+    # Tags
     tags = ndb.StringProperty(repeated=True)
-
+    # Priority
     priority = ndb.FloatProperty()
 
     def __json__(self, request):
-        return {
-                'id': self.key.integer_id(),
-                'user_id': self.user_id,
-                'user_context': self.user_context,
-                'completed': self.completed,
-                # times
-                'title': self.title,
-                'description': self.description,
-                'tags': self.tags,
-                'priority': self.priority
-                }
+        value = {
+            'id': self.key.integer_id(),
+            'user_context': self.user_context,
+            'active': self.active,
+            'completed': self.completed,
+            'time_estimate': self.time_estimate,
+            'content': self.content,
+            'tags': self.tags,
+            'priority': self.priority
+        }
+        for attr in ('completion_time',
+                     'creation_time',
+                     'modification_time',
+                     'due_time'):
+            u = getattr(self, attr, None)
+            if u:
+                u = u.isoformat(' ')
+            value[attr] = u
+        return value
 
 
     # more general status than completed/not?
     # rtm uid
-
     # meta?
-
     #notes
     #repeat
-    #time estimate
-    #tags / list
     #location
     #url
     #completed vs not?

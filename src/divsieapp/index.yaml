@@ -4,12 +4,11 @@ indexes:
   properties:
   - name: completed
   - name: user_id
-  - name: title
+  - name: content
 
 - kind: Task
   properties:
   - name: active
   - name: completed
   - name: user_id
-  - name: title
-
+  - name: content

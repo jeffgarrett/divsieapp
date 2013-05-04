@@ -1,13 +1,10 @@
 <div>
     <textarea class="card-edit" ng-model="editText"></textarea>
     <div class="card-noedit">
-        <span ng-bind="task.title"></span><br/>
+        <span ng-bind="task.content"></span><br/>
         <span ng-repeat="tag in task.tags|orderBy:tag">
                 <a href="#">#<span ng-bind="tag"></span></a>
         </span>&nbsp;
-        <div class="details">
-            <span ng-bind="task.description"></span>
-        </div>
     </div>
     <div class="muted" ng-bind="statusText">
     </div>

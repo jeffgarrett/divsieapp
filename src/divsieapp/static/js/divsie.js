@@ -128,7 +128,7 @@ app.factory('Tasks', ['$resource', '$localStorage', function($resource, $localSt
             }
         }
 
-        this.title = lines.join('\n');
+        this.content = lines.join('\n');
         this.tags = tags;
     };
 
@@ -267,10 +267,7 @@ app.directive('dvTaskCard', ['$timeout', function($timeout) {
                 this.push('#' + tag);
             }, tags);
             scope.setEditText = function() {
-                scope.editText = scope.task.title;
-                if (scope.task.description) {
-                    scope.editText += '\n' + scope.task.description;
-                }
+                scope.editText = scope.task.content;
                 if (tags) {
                     scope.editText += '\n' + tags.join(' ');
                 }
@@ -294,7 +291,7 @@ app.directive('dvTaskCard', ['$timeout', function($timeout) {
                 area.css('height', 'auto');
                 area.css('height', area[0].scrollHeight + 'px');
                 area[0].focus();
-                area[0].setSelectionRange(task.title.length, task.title.length);
+                area[0].setSelectionRange(task.content.length, task.content.length);
             };
             scope.complete = function(task) {
                 element.animate({ opacity: 0.5 }, 400, function() {
@@ -352,10 +349,10 @@ app.controller('TaskListCtrl', ['$scope', '$timeout', 'Tasks', 'Search', functio
 
             for (var j = 0; j < r.length; j++)
             {
-                // Match the token against the title
-                var title = r[j].title.toLowerCase();
-                title = title.replace(/[\.,-\/#!$%\^&\*;:{}=\-_`~()]/g,"")
-                if (title.indexOf(t) !== -1) {
+                // Match the token against the content
+                var content = r[j].content.toLowerCase();
+                content = content.replace(/[\.,-\/#!$%\^&\*;:{}=\-_`~()]/g,"")
+                if (content.indexOf(t) !== -1) {
                     continue;
                 }
 

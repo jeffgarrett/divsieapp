@@ -159,12 +159,6 @@ ul {
     padding: 0px;
 }
 
-.card .details {
-    /* display: none; */
-    display: block;
-    font-size: 12px;
-}
-
 .card .actions {
     /* display: none; */
     display: block;
@@ -172,10 +166,6 @@ ul {
     margin-left: -17px;
     margin-right: -20px;
     margin-bottom: -17px;
-}
-
-.card:hover .details {
-    /* display: block; */
 }
 
 .card:hover .actions {

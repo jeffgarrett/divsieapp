@@ -54,7 +54,7 @@ class Task(object):
         queries = 1
 
         more = True
-        tasks = models.Task.query(*ds_filters).order(models.Task.title).fetch(limit, offset=offset)
+        tasks = models.Task.query(*ds_filters).order(models.Task.content).fetch(limit, offset=offset)
         if not tasks:
             more = False
         offset += limit
@@ -73,10 +73,13 @@ class Task(object):
             t.user_id = self.request.user.key.integer_id()
             t.completed = (task.get('STATUS') == 'COMPLETED')
             t.completion_time = task.get('COMPLETED')
-            t.last_modification_time = task.get('LAST-MODIFIED')
+            t.creation_time = task.get('CREATED') or task.get('DTSTART')
+            t.modification_time = task.get('LAST-MODIFIED')
             t.due_time = task.get('DUE')
-            t.title = task.get('SUMMARY')
-            t.description = task.get('DESCRIPTION')
+            #t.time_estimate = task.get('ESTIMATE')
+            t.content = task.get('SUMMARY')
+            if task.get('DESCRIPTION'):
+                t.content += task.get('DESCRIPTION')
             t.tags = task.get('TAGS')
             t.priority = task.get('PRIORITY')
             updated_models.append(t)
@@ -106,9 +109,9 @@ class Task(object):
             if task_in['active'] != task.active:
                 task.active = task_in['active']
                 changed = True
-        if 'title' in task_in:
-            if task_in['title'] != task.title:
-                task.title = task_in['title']
+        if 'content' in task_in:
+            if task_in['content'] != task.content:
+                task.content = task_in['content']
                 changed = True
         if 'tags' in task_in:
             if task_in['tags'] != task.tags:
